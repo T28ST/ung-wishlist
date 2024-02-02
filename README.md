@@ -1,2 +1,1 @@
-"# ung-wishlist" 
-"# ung-wishlist" 
+Software Engineering Wishlist Project @ UNG
