@@ -1,4 +1,6 @@
 package ung_wishlist;
+import javax.swing.*;
+
 
 public class Test {
 	
