@@ -2,7 +2,7 @@ package ung_wishlist;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
+//import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -33,10 +33,22 @@ public class CockroachDBExample {
             }
 
             // Create a table
+            
             stmt = conn.createStatement();
-            String createTableSQL = "CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(255), age INT)";
-            stmt.executeUpdate(createTableSQL);
-            System.out.println("Table created successfully");
+            String createTableGiftSQL = "CREATE TABLE Gift (Gift_ID INT NOT NULL, Gift_Title VARCHAR(50) NOT NULL, Gift_Quantity INT NOT NULL, Gift_Link VARCHAR(300) NOT NULL, Purchased CHAR(1) NOT NULL, PRIMARY KEY (Gift_ID))";
+            stmt.executeUpdate(createTableGiftSQL);
+            System.out.println("Gift table created successfully");
+            
+         // Create List table
+            String createTableListSQL = "CREATE TABLE List (List_ID INT NOT NULL, List_Name VARCHAR(50) NOT NULL, Gift_ID INT NOT NULL, PRIMARY KEY (List_ID), FOREIGN KEY (Gift_ID) REFERENCES Gift(Gift_ID))";
+            stmt.executeUpdate(createTableListSQL);
+            System.out.println("List table created successfully");
+
+            // Create Account table
+            String createTableAccountSQL = "CREATE TABLE Account (Account_ID INT NOT NULL, Password VARCHAR(30) NOT NULL, F_Name VARCHAR(30) NOT NULL, L_Name VARCHAR(30) NOT NULL, DOB DATE NOT NULL, Email VARCHAR(40) NOT NULL, List_ID INT NOT NULL, PRIMARY KEY (Account_ID), FOREIGN KEY (List_ID) REFERENCES List(List_ID))";
+            stmt.executeUpdate(createTableAccountSQL);
+            System.out.println("Account table created successfully");
+            
 
             // Execute a query
             System.out.println("Executing query...");
