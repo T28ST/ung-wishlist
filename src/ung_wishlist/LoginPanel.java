@@ -30,8 +30,12 @@ public class LoginPanel extends JPanel{
 
 	
 	// Create account
+	// Get account info from text boxes ( fname, lname, username, email, pass)
+	// check that they don't already exist ( probably new class for checking for already existing username/email.)
+	// send to database (new class for sending new account to DB)
 	
 	// Forgot password
+	
 	
 	
 }

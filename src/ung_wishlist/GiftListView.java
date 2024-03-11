@@ -11,5 +11,9 @@ public class GiftListView extends JPanel {
 	}
 	
 	// Methods
+	
+	// Opened from create list
+	// Opened from edit list
+	// Opened from view list ( User or Guest )
 
 }
