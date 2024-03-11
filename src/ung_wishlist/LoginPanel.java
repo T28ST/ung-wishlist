@@ -22,9 +22,11 @@ public class LoginPanel extends JPanel{
 	//Methods
 	
 	// Login
-	// Check DB for username and password
-	// if good login
-	// else return error (wrong username or password/ No account)
+	// When login button is pushed
+	// Get information from the text boxes and put into string variables
+	// If Login is true ( Call authentication class to check the username and password)
+	// Else say invalid
+	// Return to login screen
 
 	
 	// Create account
