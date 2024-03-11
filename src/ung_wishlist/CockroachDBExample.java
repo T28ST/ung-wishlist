@@ -2,7 +2,6 @@ package ung_wishlist;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-//import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -50,7 +49,7 @@ public class CockroachDBExample {
             System.out.println("Account table created successfully");
             
 
-            // Execute a query
+            //Execute a query
             System.out.println("Executing query...");
             String insertDataSQL = "INSERT INTO users (name, age) VALUES ('John', 30), ('Alice', 25), ('Bob', 35)";
             stmt.executeUpdate(insertDataSQL);
