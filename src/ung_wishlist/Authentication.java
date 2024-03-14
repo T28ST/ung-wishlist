@@ -54,14 +54,35 @@ public class Authentication {
 	}
 
 	public static boolean checkEmailExists(String email){
-		//When creating new account, check if there is already an account associated with an email address
-		//connect to db
-		//search db for email using SQL
-		//if found return true
-		//if not found return false (email not associated with account, can be used)
-
-
-		return false; //placeholder
+		boolean exists = false;
+		
+		//When creating new account, check if email  is already taken
+		// Connect to DB
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			// Create SQL string to inject
+			
+			String sql = "SELECT COUNT(*) AS count FROM users WHERE email = ?"; // Count the number of results that have that email
+			// Prepare the sql statement and add email to string
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				statement.setString(1, email);
+				
+				// Execute SQL
+				try (ResultSet resultSet = statement.executeQuery()) {
+					// if there is a result table, look at the first row.
+					if (resultSet.next()) {
+						// Get the results from the SQL statement in the count column
+						int count = resultSet.getInt("count");
+						// if there are more than 0, set exists to TRUE
+						exists = count > 0;
+						
+					}
+				}
+			}
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}
+		return exists;
 	}
 	
 	public static void main(String[] args) {
