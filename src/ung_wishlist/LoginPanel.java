@@ -47,8 +47,8 @@ public class LoginPanel extends JPanel{
 
 		// check that they don't already exist ( probably new class for checking for already existing username/email.)
 
-		boolean usernameExists = AccountDatabaseChecker.checkUsernameExists(username);
-        boolean emailExists = AccountDatabaseChecker.checkEmailExists(emailAddress);
+		boolean usernameExists = Authentication.checkUsernameExists(username);
+        boolean emailExists = Authentication.checkEmailExists(emailAddress);
 	}
 	
 	// Forgot password
