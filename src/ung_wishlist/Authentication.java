@@ -72,4 +72,13 @@ public class Authentication {
 		return exists;
 	}
 
+	public static boolean isPasswordCorrect(String username, String password) {
+		boolean check = false;
+		
+		// Connect to DB and search for users and check against password
+		// hashing algorithm for password optional
+		
+		return check;
+	}
+	
 }
