@@ -6,20 +6,7 @@ public class Authentication {
 	static final String DB_URL = "jdbc:postgresql://ung-swe-7079.g8z.gcp-us-east1.cockroachlabs.cloud:26257/ung_swe";
 	static final String DB_USER = "Team_2";
 	static final String DB_PASS = "lxPD1YxuiuMKaxUiNglMCw";
-	
-	
-	public static boolean authenticate (String username) {
-		// connect to db
-		// search db for username using SQL
-		// if found search for password using SQL
-		// if both are found return true
-		// catch errors just in case
-		// else return false if
 		
-		
-		return false; //placeholder
-	}
-
 	public static boolean checkUsernameExists (String username) {
 		
 		boolean exists = false;
@@ -83,17 +70,6 @@ public class Authentication {
 			e.printStackTrace();
 		}
 		return exists;
-	}
-	
-	public static void main(String[] args) {
-		// string username
-		// string password
-		
-		// if ( Call authenticate method)
-		// else ("too bad")
-		
-		
-		
 	}
 
 }
