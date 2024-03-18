@@ -4,15 +4,15 @@ import javax.swing.*;
 
 public class LoginPanel extends JPanel{
 	// Components
-	// FName
-	// LName
-	// email
-	// DoB
+	private JTextField FName;
+	private JTextField LName;
+	private JTextField email;
+	private JTextField DoB;
 	private JTextField usernameField;
 	private JTextField passwordField;
 	private JButton loginButton;
-	// Forgot password button
-	// Create account button
+	private JButton forgotpassword;
+	private JButton createaccount;
 	
 	
 	public LoginPanel() {
@@ -30,9 +30,26 @@ public class LoginPanel extends JPanel{
 
 	
 	// Create account
-	// Get account info from text boxes ( fname, lname, username, email, pass)
-	// check that they don't already exist ( probably new class for checking for already existing username/email.)
+	
+	
 	// send to database (new class for sending new account to DB)
+
+	public void createAccount(){
+
+		// Get account info from text boxes ( fname, lname, username, email, pass)
+
+		String firstName = FName.getText();
+        String lastName = LName.getText();
+        String emailAddress = email.getText();
+        String dateOfBirth = DoB.getText();
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+		// check that they don't already exist ( probably new class for checking for already existing username/email.)
+
+		boolean usernameExists = Authentication.checkUsernameExists(username);
+        boolean emailExists = Authentication.checkEmailExists(emailAddress);
+	}
 	
 	// Forgot password
 	
