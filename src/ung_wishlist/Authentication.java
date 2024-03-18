@@ -7,7 +7,7 @@ public class Authentication {
 	static final String DB_USER = "Team_2";
 	static final String DB_PASS = "lxPD1YxuiuMKaxUiNglMCw";
 		
-	public static boolean checkUsernameExists (String username) {
+	public static boolean checkUsernameExists (String username) { //for account creation
 		
 		boolean exists = false;
 		
@@ -40,7 +40,7 @@ public class Authentication {
 		return exists;
 	}
 
-	public static boolean checkEmailExists(String email){
+	public static boolean checkEmailExists(String email){ //for account creation
 		boolean exists = false;
 		
 		//When creating new account, check if email  is already taken
@@ -70,6 +70,11 @@ public class Authentication {
 			e.printStackTrace();
 		}
 		return exists;
+	}
+
+	public static boolean isPasswordValid(String password){
+		if(password.length() <= 30) return true;
+		else return false;
 	}
 
 	public static boolean isPasswordCorrect(String username, String password) {

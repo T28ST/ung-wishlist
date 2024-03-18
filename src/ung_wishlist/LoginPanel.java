@@ -49,6 +49,25 @@ public class LoginPanel extends JPanel{
 
 		boolean usernameExists = Authentication.checkUsernameExists(username);
         boolean emailExists = Authentication.checkEmailExists(emailAddress);
+
+		if (usernameExists) {
+            JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different one."); //username taken
+        } else if (emailExists) {
+            JOptionPane.showMessageDialog(null, "Email is already associated with an account. Please use a different one."); //email already in use
+        } else {
+			boolean passwordValid = Authentication.isPasswordValid(password);
+
+			if(passwordValid){
+				AccountDatabaseManager.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password);
+            	JOptionPane.showMessageDialog(null, "Account created successfully!");
+			} else {
+				JOptionPane.showMessageDialog(null, "Password is invalid.");
+			}
+
+
+            // Here you should implement the logic to send the account information to the database.
+            // Assuming that logic is implemented in a separate class called AccountDatabaseManager.
+        }
 	}
 	
 	// Forgot password
