@@ -58,15 +58,11 @@ public class LoginPanel extends JPanel{
 			boolean passwordValid = Authentication.isPasswordValid(password);
 
 			if(passwordValid){
-				AccountDatabaseManager.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password);
+				AccountDatabaseManager.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password); //placeholder push account info to database
             	JOptionPane.showMessageDialog(null, "Account created successfully!");
 			} else {
 				JOptionPane.showMessageDialog(null, "Password is invalid.");
 			}
-
-
-            // Here you should implement the logic to send the account information to the database.
-            // Assuming that logic is implemented in a separate class called AccountDatabaseManager.
         }
 	}
 	
