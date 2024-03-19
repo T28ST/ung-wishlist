@@ -96,20 +96,14 @@ public class LoginPanel extends JPanel{
         String DoB = dobField.getText();
         
 
-        boolean usernameExists = checkUsernameExists(username);
-        if (usernameExists) {
-            JOptionPane.showMessageDialog(this, "Username already exists!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
+        boolean usernameExists = checkUsernameExists(username); 
         boolean emailExists = checkEmailExists(Email);
-        if (emailExists) {
-            JOptionPane.showMessageDialog(this, "Email already exists!", "Error", JOptionPane.ERROR_MESSAGE);
-           return;
-        }
+        if (!usernameExists && !emailExists) {
+            authenticationClass.saveToDatabase(all info);
+        
         
         //sendToDatabase(username, password, FName, LName, Email, DoB); <- no idea here either
-	}
+	
 	
 	 private boolean checkUsernameExists(String username) {
 	        // Logic to check if the username already exists in the database
@@ -130,4 +124,5 @@ public class LoginPanel extends JPanel{
 	
 	
 	}
+	
 
