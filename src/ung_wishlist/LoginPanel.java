@@ -92,8 +92,8 @@ public class LoginPanel extends JPanel{
         
 		// check that they don't already exist ( probably new class for checking for already existing username/email.)
 
-		boolean usernameExists = Authentication.checkUsernameExists(username);
-    boolean emailExists = Authentication.checkEmailExists(emailAddress);
+        boolean usernameExists = Authentication.checkUsernameExists(username);
+        boolean emailExists = Authentication.checkEmailExists(email);
 
 		if (usernameExists) {
             JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different one."); //username taken
@@ -103,13 +103,12 @@ public class LoginPanel extends JPanel{
 			boolean passwordValid = Authentication.isPasswordValid(password);
 
 			if(passwordValid){
-				AccountDatabaseManager.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password); //placeholder push account info to database
+				Authentication.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password); //placeholder push account info to database
             	JOptionPane.showMessageDialog(null, "Account created successfully!");
 			} else {
 				JOptionPane.showMessageDialog(null, "Password is invalid.");
 			}
         }
-	}
         if (!usernameExists && !emailExists) {
             Authentication.createAccount(username, password,FName, LName, Email, DoB);
             
