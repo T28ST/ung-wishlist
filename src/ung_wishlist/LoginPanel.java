@@ -4,21 +4,15 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 
 public class LoginPanel extends JPanel{
-	// Components
-	// FName
 	private String FName;
-	// LName
 	private String LName;
-	// email
 	private String Email;
-	// DoB
 	private int DoB;
 	
 	private JTextField usernameField;
 	private JTextField passwordField;
 	private JButton loginButton;
-	// Forgot password button
-	// Create account button
+
 	private JButton forgotPasswordButton;
 	private JButton createAccountButton;
 	private JTextComponent emailField;
@@ -93,7 +87,7 @@ public class LoginPanel extends JPanel{
 		// check that they don't already exist ( probably new class for checking for already existing username/email.)
 
         boolean usernameExists = Authentication.checkUsernameExists(username);
-        boolean emailExists = Authentication.checkEmailExists(email);
+        boolean emailExists = Authentication.checkEmailExists(Email);
 
 		if (usernameExists) {
             JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different one."); //username taken
@@ -103,26 +97,14 @@ public class LoginPanel extends JPanel{
 			boolean passwordValid = Authentication.isPasswordValid(password);
 
 			if(passwordValid){
-				Authentication.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password); //placeholder push account info to database
+				Authentication.createAccount(FName, LName, Email, DoB, username, password); //placeholder push account info to database
             	JOptionPane.showMessageDialog(null, "Account created successfully!");
 			} else {
 				JOptionPane.showMessageDialog(null, "Password is invalid.");
 			}
         }
-        if (!usernameExists && !emailExists) {
-            Authentication.createAccount(username, password,FName, LName, Email, DoB);
-            
-        }
+        
 	} 
-
-	
-	 private boolean checkUsernameExists(String username) {
-	        // Logic to check if the username already exists in the database
-	        // This could involve querying your database
-		 	//No idea how to do this, this is on you Tyler lmao xD        
-	        return true;
-	    }
-	
 	
 	// Forgot password method <- this will require alot of SQL implmentation and calling apperently so im not sure how you want me to go about this tbh.
 	
