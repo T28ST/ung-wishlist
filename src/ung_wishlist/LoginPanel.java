@@ -44,18 +44,20 @@ public class LoginPanel extends JPanel{
 
 	//Methods
 	
-	// *create Login method-Done
-	// When login button is pushed <- not sure what to do here ngl
-	// *Get information from the text boxes and put into string variables-Done(i think)
-	// *If Login is true ( Call authentication class to check the username and password)- Done
-	// *Else say invalid-Done
-	// Return to login screen- i will do my best
 
+	// Login
+	// pulls information from login panel
+	// checks that they are correct
+	// if so, login and go to account screen.
+	
+	// needs code to set user as logged in...
+	// needs 
 	public void login() {
 		
     String username = usernameField.getText();
     String password = passwordField.getText();
 
+    // only checks that 
     boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
 
     if (isAuthenticated) {
@@ -70,11 +72,14 @@ public class LoginPanel extends JPanel{
 }
 
 	
+
 	// Create account method
-	// Get account info from text boxes ( fname, lname, username, email, pass)
-	// check that they don't already exist ( probably new class for checking for already existing username/email.)
-	// send to database (new class for sending new account to DB)
+	// Retrieves information from create account screen
+	// checks that username and password are unique
+	// if so, creates the account and opens account screen.
 	
+	// Needs code to return to create account panel.
+	// Needs code to go to login screen when account creation successful
 	public void createAccount() {
 
         String username = usernameField.getText();
@@ -90,25 +95,33 @@ public class LoginPanel extends JPanel{
         boolean emailExists = Authentication.checkEmailExists(Email);
 
 		if (usernameExists) {
+			
             JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different one."); //username taken
-        } else if (emailExists) {
+            // break, Return to create account screen
+            
+		} else if (emailExists) {
+        	
             JOptionPane.showMessageDialog(null, "Email is already associated with an account. Please use a different one."); //email already in use
-        } else {
+            // break, return to create account screen
+            
+		} else {
+			
 			boolean passwordValid = Authentication.isPasswordValid(password);
 
 			if(passwordValid){
 				Authentication.createAccount(FName, LName, Email, DoB, username, password); //placeholder push account info to database
             	JOptionPane.showMessageDialog(null, "Account created successfully!");
+            	
+            	// Account creation successful, go to login screen.
+            	
 			} else {
+				
 				JOptionPane.showMessageDialog(null, "Password is invalid.");
+				// Clear password field, return to create account
 			}
         }
         
 	} 
-	
-	// Forgot password method <- this will require alot of SQL implmentation and calling apperently so im not sure how you want me to go about this tbh.
-	
-	// (0_0)
 	
 	
 	public static void forgotPassword(String usernameOrEmail) {
