@@ -105,6 +105,7 @@ public class Authentication {
 		return check;
 	}
 	
+
 	public static void createAccount(String firstName, String lastName, String emailAddress, String dateOfBirth, String username, String password) {
 		// Saves the given information to the account table 
 		
@@ -135,8 +136,6 @@ public class Authentication {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 }
