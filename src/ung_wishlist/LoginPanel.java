@@ -24,13 +24,8 @@ public class LoginPanel extends JPanel{
 	private JTextComponent emailField;
 	private JTextComponent lnameField;
 	private JTextComponent fnameField;
-	private JTextComponent dobField 
-	
-	forgotPasswordButton = new JButton("Forgot Password");
-	//^(ono)^ why you give me error. the fuck you mean syntax error??
-	
-	createAccountButton = new JButton("Create Account");
-	
+	private JTextComponent dobField;
+
 	
 	public LoginPanel() {
 
@@ -67,7 +62,7 @@ public class LoginPanel extends JPanel{
     String username = usernameField.getText();
     String password = passwordField.getText();
 
-    boolean isAuthenticated = Authentication.authenticate(username, password);
+    boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
 
     if (isAuthenticated) {
         JOptionPane.showMessageDialog(this, "Login successful!");
@@ -97,10 +92,12 @@ public class LoginPanel extends JPanel{
         
 
         boolean usernameExists = checkUsernameExists(username); 
-        boolean emailExists = checkEmailExists(Email);
-        if (!usernameExists && !emailExists) {
-            authenticationClass.saveToDatabase(all info);
-        
+        boolean emailExists = Authentication.checkEmailExists(Email);
+        if (!Authentication.checkUsernameExists(username) && !Authentication.checkEmailExists(Email)) {
+            Authentication.createAccount(username, password,FName, LName, Email, DoB);
+            
+        }
+	} 
         
         //sendToDatabase(username, password, FName, LName, Email, DoB); <- no idea here either
 	
@@ -121,8 +118,7 @@ public class LoginPanel extends JPanel{
 	public static void forgotPassword(String usernameOrEmail) {
 		
 	}
+}
 	
-	
-	}
 	
 

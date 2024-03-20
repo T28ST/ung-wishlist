@@ -81,4 +81,12 @@ public class Authentication {
 		return check;
 	}
 	
+	public static boolean checkLogin() {
+		return false;
+	}
+	
+	public static boolean createAccount(String username, String password, String Dob, String Fname, String Lname, String email) {
+		return false;
+	}
+	
 }
