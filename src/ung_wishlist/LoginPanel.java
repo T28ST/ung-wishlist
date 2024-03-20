@@ -90,14 +90,32 @@ public class LoginPanel extends JPanel{
         String Email = emailField.getText();
         String DoB = dobField.getText();
         
+		// check that they don't already exist ( probably new class for checking for already existing username/email.)
 
-        boolean usernameExists = checkUsernameExists(username); 
-        boolean emailExists = Authentication.checkEmailExists(Email);
+		boolean usernameExists = Authentication.checkUsernameExists(username);
+    boolean emailExists = Authentication.checkEmailExists(emailAddress);
+
+		if (usernameExists) {
+            JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different one."); //username taken
+        } else if (emailExists) {
+            JOptionPane.showMessageDialog(null, "Email is already associated with an account. Please use a different one."); //email already in use
+        } else {
+			boolean passwordValid = Authentication.isPasswordValid(password);
+
+			if(passwordValid){
+				AccountDatabaseManager.createAccount(firstName, lastName, emailAddress, dateOfBirth, username, password); //placeholder push account info to database
+            	JOptionPane.showMessageDialog(null, "Account created successfully!");
+			} else {
+				JOptionPane.showMessageDialog(null, "Password is invalid.");
+			}
+        }
+	}
         if (!usernameExists && !emailExists) {
             Authentication.createAccount(username, password,FName, LName, Email, DoB);
             
         }
 	} 
+
 	
 	 private boolean checkUsernameExists(String username) {
 	        // Logic to check if the username already exists in the database
