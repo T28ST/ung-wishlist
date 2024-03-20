@@ -93,14 +93,11 @@ public class LoginPanel extends JPanel{
 
         boolean usernameExists = checkUsernameExists(username); 
         boolean emailExists = Authentication.checkEmailExists(Email);
-        if (!Authentication.checkUsernameExists(username) && !Authentication.checkEmailExists(Email)) {
+        if (!usernameExists && !emailExists) {
             Authentication.createAccount(username, password,FName, LName, Email, DoB);
             
         }
 	} 
-        
-        //sendToDatabase(username, password, FName, LName, Email, DoB); <- no idea here either
-	
 	
 	 private boolean checkUsernameExists(String username) {
 	        // Logic to check if the username already exists in the database

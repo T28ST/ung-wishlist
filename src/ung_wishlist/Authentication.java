@@ -16,7 +16,7 @@ public class Authentication {
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			// Create SQL string to inject
 			
-			String sql = "SELECT COUNT(*) AS count FROM users WHERE username = ?"; // Count the number of results that have that username
+			String sql = "SELECT COUNT(*) AS count FROM account WHERE username = ?"; // Count the number of results that have that username
 			// Prepare the sql statement and add username to string
 			
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,7 +48,7 @@ public class Authentication {
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			// Create SQL string to inject
 			
-			String sql = "SELECT COUNT(*) AS count FROM users WHERE email = ?"; // Count the number of results that have that email
+			String sql = "SELECT COUNT(*) AS count FROM account WHERE email = ?"; // Count the number of results that have that email
 			// Prepare the sql statement and add email to string
 			
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -76,17 +76,66 @@ public class Authentication {
 		boolean check = false;
 		
 		// Connect to DB and search for users and check against password
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			// Create SQL string
+			String sql = "SELECT password FROM account WHERE username = ?";
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				statement.setString(1, username);
+				try(ResultSet resultSet = statement.executeQuery()) {
+					if (resultSet.next()) {
+						String storedPassword = resultSet.getString("password");
+						// Optional password decryption here.
+						
+						// Compare passwords directly
+						return storedPassword.equals(password);
+						
+					}
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		// hashing algorithm for password optional
 		
 		return check;
 	}
 	
-	public static boolean checkLogin() {
-		return false;
-	}
-	
-	public static boolean createAccount(String username, String password, String Dob, String Fname, String Lname, String email) {
-		return false;
+
+	public static void createAccount(String firstName, String lastName, String emailAddress, String dateOfBirth, String username, String password) {
+		// Saves the given information to the account table 
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			// SQL string to execute.
+			String sql = "INSERT INTO account (f_name, l_name, email, dob, username, password) VALUES (?, ?, ?, ?, ?, ?)";
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				// Set VALUES to entered strings
+				statement.setString(1, firstName);
+				statement.setString(2, lastName);
+				statement.setString(3, emailAddress);
+				statement.setString(4, dateOfBirth);
+				statement.setString(5, username);
+				statement.setString(6, password);
+				
+				// variable for verification
+				int rowsInserted = statement.executeUpdate();
+				
+				if (rowsInserted > 0) {
+					System.out.println("Account created successfully.");
+				} else {
+					System.out.println("Failed to create account.");
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
