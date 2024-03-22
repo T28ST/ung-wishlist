@@ -3,32 +3,39 @@ package ung_wishlist;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
-public class CreateAccount {
+import javax.swing.*;
+import java.awt.*;
+public class CreateAccount extends JPanel {
+	private MainFrame mainFrame;
 	
+	/*
 	public static void main(String[] args) throws SQLException {
+		
 			JFrame CreateFrame = new JFrame("Create Account");
 			JTextField IDField = new JTextField("",25);
 			IDField.setBounds(50,80,150,20);	
+			
 			JLabel IDLabel = new JLabel("email");
 			IDLabel.setBounds(50,60,150,20);
+			
 			JTextField UserField = new JTextField("",25);
 			UserField.setBounds(50,120,150,20);
+			
 			JLabel UserLabel = new JLabel("User Name");
 			UserLabel.setBounds(50,100,150,20);
+			
 			JTextField FNameField = new JTextField("",25);
 			FNameField.setBounds(50,160,150,20);
+			
 			JLabel FNameLabel = new JLabel("Full name");
 			FNameLabel.setBounds(50,140,150,20);
+			
 			JTextField LNameField = new JTextField("",25);
 			LNameField.setBounds(50,200,150,20);
+			
 			JLabel LNameLabel = new JLabel("password");
 			LNameLabel.setBounds(50,180,150,20);
+			
 			JButton CreateLogin = new JButton("Create Account");
 			CreateLogin.setBounds(50,220,150,20);
 			
@@ -65,5 +72,24 @@ public class CreateAccount {
 			
 			
 		}
+	*/
+	public CreateAccount(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        JLabel label = new JLabel("Welcome Panel");
+        panel.add(label, BorderLayout.CENTER);
+
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Switch back to the login panel
+                mainFrame.showLoginPanel();
+            }
+        });
+        panel.add(logoutButton, BorderLayout.SOUTH);
+
+    }
 	
 	}

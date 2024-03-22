@@ -8,25 +8,20 @@ import java.sql.SQLException;
 
 
 public class LoginPanel extends JPanel{
-	private String FName;
-	private String LName;
-	private String Email;
-	private int DoB;
-	
+	private MainFrame mainFrame;
 	private JTextField usernameField;
 	private JTextField passwordField;
-	private JButton loginButton;
-
 	private JButton forgotPasswordButton;
 	private JButton createAccountButton;
-	private JTextComponent emailField;
-	private JTextComponent lnameField;
-	private JTextComponent fnameField;
-	private JTextComponent dobField;
+
 
 	
-	public LoginPanel() {
-		setLayout(new GridLayout(4, 2));
+	
+	public LoginPanel(MainFrame mainFrame) { 
+		this.mainFrame = mainFrame;
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
 		
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameField = new JTextField();
@@ -43,9 +38,11 @@ public class LoginPanel extends JPanel{
         	}
         } );
         
+        // Forgot password button with action event.
 	   forgotPasswordButton = new JButton("Forgot Password");
        forgotPasswordButton.addActionListener(new ActionListener() {
     	   public void actionPerformed(ActionEvent e) {
+    		   // Placeholder
     		   JOptionPane.showMessageDialog(null, "Don't forget next time silly");
     	   }
        });
@@ -54,25 +51,18 @@ public class LoginPanel extends JPanel{
         createAccountButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
 				
-				CreateAccount createAccount = new CreateAccount();
-				try {
-				createAccount.main(null);
-				} catch (SQLException sql) {
-					System.out.println("SQL Exception occured " + sql.getMessage());
-				}
-				
+				mainFrame.showAccountPanel();
         	}
         });
-	    
-	    
-        add(usernameLabel);
-        add(usernameField);
-        add(passwordLabel);
-        add(passwordField);
-        add(new JLabel()); // empty label as placeholder
-        add(loginButton);
-        add(createAccountButton);
-        add(forgotPasswordButton);
+	  
+       add(usernameLabel);
+       add(usernameField);
+       add(passwordLabel);
+       add(passwordField);
+       add(new JLabel()); // empty label for whitespace
+       add(loginButton);
+       add(createAccountButton);
+       add(forgotPasswordButton);
 
 	}
 	//Methods
@@ -89,9 +79,8 @@ public class LoginPanel extends JPanel{
     String username = usernameField.getText();
     String password = passwordField.getText();
 
- 
     
-    // Testing login login
+    // Testing login logic
     if (username.equals("admin") && password.equals("admin")) {
     	JOptionPane.showMessageDialog(null, "Login test successful");
     } else {
@@ -115,64 +104,5 @@ public class LoginPanel extends JPanel{
     *
     */
 }
-
-	
-
-	// Create account method
-	// Retrieves information from create account screen
-	// checks that username and password are unique
-	// if so, creates the account and opens account screen.
-	
-	// Needs code to return to create account panel.
-	// Needs code to go to login screen when account creation successful
-	public void createAccount() {
-
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        String FName = fnameField.getText();
-        String LName = lnameField.getText();
-        String Email = emailField.getText();
-        String DoB = dobField.getText();
-        
-		// check that they don't already exist ( probably new class for checking for already existing username/email.)
-
-        boolean usernameExists = Authentication.checkUsernameExists(username);
-        boolean emailExists = Authentication.checkEmailExists(Email);
-
-		if (usernameExists) {
-			
-            JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different one."); //username taken
-            // break, Return to create account screen
-            
-		} else if (emailExists) {
-        	
-            JOptionPane.showMessageDialog(null, "Email is already associated with an account. Please use a different one."); //email already in use
-            // break, return to create account screen
-            
-		} else {
-			
-			boolean passwordValid = Authentication.isPasswordValid(password);
-
-			if(passwordValid){
-				Authentication.createAccount(FName, LName, Email, DoB, username, password); //placeholder push account info to database
-            	JOptionPane.showMessageDialog(null, "Account created successfully!");
-            	
-            	// Account creation successful, go to login screen.
-            	
-			} else {
-				
-				JOptionPane.showMessageDialog(null, "Password is invalid.");
-				// Clear password field, return to create account
-			}
-        }
-        
-	} 
-	
-	
-	public static void forgotPassword(String usernameOrEmail) {
-		
-	}
 }
-	
-	
 
