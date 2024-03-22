@@ -76,11 +76,7 @@ public class LoginPanel extends JPanel{
     String username = usernameField.getText();
     String password = passwordField.getText();
 
-    //  Working DB communication
-    // Commented out to prevent DB shenanegans.
-    //boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
-
-    boolean isAuthenticated = false;
+ 
     
     // Testing login login
     if (username.equals("admin") && password.equals("admin")) {
@@ -93,7 +89,7 @@ public class LoginPanel extends JPanel{
      * Login for successful login
      * Needs work to actually log the user in.
      * 
-     * 
+     *   boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
     if (isAuthenticated) {
         JOptionPane.showMessageDialog(this, "Login successful!");
         usernameField.setText("");
