@@ -22,11 +22,10 @@ public class LoginPanel extends JPanel{
 	private JTextComponent lnameField;
 	private JTextComponent fnameField;
 	private JTextComponent dobField;
-    // forgotPasswordButton = new JButton("Forgot Password");
-    // createAccountButton = new JButton("Create Account");
+
 	
 	public LoginPanel() {
-		setLayout(new GridLayout(3, 2));
+		setLayout(new GridLayout(4, 2));
 		
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameField = new JTextField();
@@ -43,12 +42,23 @@ public class LoginPanel extends JPanel{
         	}
         } );
         
+	    forgotPasswordButton = new JButton("Forgot Password");
+       forgotPasswordButton.addActionListener(new ActionListener() {
+    	   public void actionPerformed(ActionEvent e) {
+    		   
+    	   }
+       });
+	    
+	    createAccountButton = new JButton("Create Account");
+        
         add(usernameLabel);
         add(usernameField);
         add(passwordLabel);
         add(passwordField);
         add(new JLabel()); // empty label as placeholder
         add(loginButton);
+        add(createAccountButton);
+        add(forgotPasswordButton);
 
 	}
 	//Methods
@@ -66,18 +76,35 @@ public class LoginPanel extends JPanel{
     String username = usernameField.getText();
     String password = passwordField.getText();
 
-    // only checks that 
-    boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
+    //  Working DB communication
+    // Commented out to prevent DB shenanegans.
+    //boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
 
+    boolean isAuthenticated = false;
+    
+    // Testing login login
+    if (username.equals("admin") && password.equals("admin")) {
+    	JOptionPane.showMessageDialog(null, "Login test successful");
+    } else {
+    	JOptionPane.showMessageDialog(null, "Login Incorrect, Test Successful");
+   }
+    
+    /*
+     * Login for successful login
+     * Needs work to actually log the user in.
+     * 
+     * 
     if (isAuthenticated) {
         JOptionPane.showMessageDialog(this, "Login successful!");
         usernameField.setText("");
         passwordField.setText("");
-        
     } 
     	else {
         JOptionPane.showMessageDialog(this, "Invalid username or password!", "Error", JOptionPane.ERROR_MESSAGE);
     }
+    *
+    *
+    */
 }
 
 	
