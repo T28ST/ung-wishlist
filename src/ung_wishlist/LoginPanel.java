@@ -50,7 +50,7 @@ public class LoginPanel extends JPanel{
 	    createAccountButton = new JButton("Create Account");
         createAccountButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-				
+				// Switch to Create Account Panel
 				mainFrame.showAccountPanel();
         	}
         });
@@ -59,7 +59,6 @@ public class LoginPanel extends JPanel{
        add(usernameField);
        add(passwordLabel);
        add(passwordField);
-       add(new JLabel()); // empty label for whitespace
        add(loginButton);
        add(createAccountButton);
        add(forgotPasswordButton);

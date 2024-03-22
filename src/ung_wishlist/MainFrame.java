@@ -12,7 +12,7 @@ public class MainFrame {
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 200);
+		frame.setSize(800, 600);
 		frame.setLayout(new CardLayout());
 		frame.setLocationRelativeTo(null);
 		
@@ -20,7 +20,7 @@ public class MainFrame {
 		createAccountPanel = new CreateAccount(this);
 		
 		frame.add(loginPanel, "loginPanel");
-		frame.add(createAccountPanel, "Create Account");
+		frame.add(createAccountPanel, "createAccountPanel");
 		
 		showLoginPanel();
 
@@ -29,12 +29,12 @@ public class MainFrame {
 	
 	public void showLoginPanel() {
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
-		cardLayout.show(frame.getContentPane(), "Login");
+		cardLayout.show(frame.getContentPane(), "loginPanel");
 	}
 	
 	public void showAccountPanel() {
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
-		cardLayout.show(frame.getContentPane(), "Create Account");
+		cardLayout.show(frame.getContentPane(), "createAccountPanel");
 	}
 		
 		

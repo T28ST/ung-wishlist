@@ -75,20 +75,42 @@ public class CreateAccount extends JPanel {
 	*/
 	public CreateAccount(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
-        JPanel panel = new JPanel();
+		
+		JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        JLabel label = new JLabel("Welcome Panel");
-        panel.add(label, BorderLayout.CENTER);
-
-        JButton logoutButton = new JButton("Logout");
-        logoutButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Switch back to the login panel
-                mainFrame.showLoginPanel();
-            }
-        });
-        panel.add(logoutButton, BorderLayout.SOUTH);
+		JFrame CreateFrame = new JFrame("Create Account");
+		JTextField IDField = new JTextField();
+		JLabel IDLabel = new JLabel("email");
+		JTextField UserField = new JTextField();
+		JLabel UserLabel = new JLabel("User Name");
+		JTextField FNameField = new JTextField();	
+		JLabel FNameLabel = new JLabel("Full name");	
+		JTextField LNameField = new JTextField();	
+		JLabel LNameLabel = new JLabel("password");	
+		JButton CreateLogin = new JButton("Create Account");
+		
+		CreateLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			CreateFrame.setVisible(false);
+			
+			String IDFieldText = IDField.getText();
+			int IDint= Integer.parseInt(IDFieldText);
+			String UserFieldText = UserField.getText();
+			String FNameFieldText = FNameField.getText();
+			String LNameFieldText = LNameField.getText();
+			//you can use the UserField text for when you need to recieve the values
+			}
+		});
+		add(CreateLogin);
+		add(LNameLabel);
+		add(FNameLabel);
+		add(UserLabel);
+		add(IDLabel);
+		add(LNameField);
+		add(FNameField);
+		add(UserField);
+		add(IDField);
 
     }
 	
