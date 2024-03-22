@@ -72,12 +72,16 @@ public class Authentication {
 		return exists;
 	}
 
+
 	public static boolean isPasswordValid(String password){
+		// Only checks for length
+		// Needs Caps, Character and Digit Check.
 		if(password.length() <= 30) return true;
 		else return false;
+		
 	}
 
-	public static boolean isPasswordCorrect(String username, String password) {
+	public static boolean CheckLogin(String username, String password) {
 		boolean check = false;
 		
 		// Connect to DB and search for users and check against password
@@ -96,12 +100,9 @@ public class Authentication {
 						
 						// Compare passwords directly
 						return storedPassword.equals(password);
-						
 					}
 				}
-			}
-			
-			
+			}		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

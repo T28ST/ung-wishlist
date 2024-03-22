@@ -5,6 +5,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.text.JTextComponent;
 import java.sql.SQLException;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.border.BevelBorder;
 
 
 public class LoginPanel extends JPanel{
@@ -19,8 +24,7 @@ public class LoginPanel extends JPanel{
 	
 	public LoginPanel(MainFrame mainFrame) { 
 		this.mainFrame = mainFrame;
-		setLayout(new BorderLayout());
-		JPanel panel = new JPanel(new GridLayout(4,2));
+		JPanel panel = new JPanel(new GridLayout(0,1));
 
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameField = new JTextField();
@@ -55,6 +59,21 @@ public class LoginPanel extends JPanel{
 				mainFrame.showAccountPanel();
         	}
         });
+       setLayout(new GridLayout(1, 2, 0, 0));
+       
+       JPanel logo = new JPanel();
+       logo.setBorder(null);
+       add(logo);
+       logo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+       
+       JLabel Icon = DefaultComponentFactory.getInstance().createTitle("");
+       Icon.setIcon(new ImageIcon("C:\\Git\\ung-wishlist\\img\\gift.png"));
+       logo.add(Icon);
+       
+       JLabel appName = DefaultComponentFactory.getInstance().createLabel("Secret Shopper");
+       appName.setVerticalAlignment(SwingConstants.BOTTOM);
+       appName.setLabelFor(Icon);
+       logo.add(appName);
 	  
        panel.add(usernameLabel);
        panel.add(usernameField);
@@ -65,7 +84,7 @@ public class LoginPanel extends JPanel{
        panel.add(createAccountButton);
        panel.add(forgotPasswordButton);
        
-       add(panel, BorderLayout.CENTER);
+       add(panel);
 
 	}
 	//Methods
@@ -99,6 +118,7 @@ public class LoginPanel extends JPanel{
         JOptionPane.showMessageDialog(this, "Login successful!");
         usernameField.setText("");
         passwordField.setText("");
+        // Open account screen
     } 
     	else {
         JOptionPane.showMessageDialog(this, "Invalid username or password!", "Error", JOptionPane.ERROR_MESSAGE);

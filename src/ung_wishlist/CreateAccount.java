@@ -37,18 +37,18 @@ public class CreateAccount extends JPanel {
 		JButton CancelButton = new JButton("Cancel");
 		
 		// Add to grid layout 
-		panel.add(FNameLabel); 	// First Name Label
-		panel.add(FNameField); 	// First Name Text Field
-		panel.add(LNameLabel); 	// Last Name Label
-		panel.add(LNameField); 	// Last Name Text Field
-		panel.add(UserLabel);  	// User name Label
+		panel.add(FNameLabel); 		// First Name Label
+		panel.add(FNameField); 		// First Name Text Field
+		panel.add(LNameLabel); 		// Last Name Label
+		panel.add(LNameField); 		// Last Name Text Field
+		panel.add(UserLabel);  		// User name Label
 		panel.add(UserField);	 	// User Name Text Field
-		panel.add(EmailLabel); 	// Email Label
-		panel.add(EmailField); 	// Email TextField
+		panel.add(EmailLabel); 		// Email Label
+		panel.add(EmailField); 		// Email TextField
 		panel.add(passLabel);		// Password Label
 		panel.add(passField);		// Password Field
-		panel.add(CreateLogin);
-		panel.add(CancelButton);
+		panel.add(CreateLogin);		// Create account button
+		panel.add(CancelButton);	// Cancel button
 		
 		CreateLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

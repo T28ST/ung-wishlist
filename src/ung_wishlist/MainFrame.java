@@ -12,15 +12,18 @@ public class MainFrame {
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(400, 300);
-		frame.setLayout(new CardLayout());
+		frame.setSize(393, 242);
+		frame.getContentPane().setLayout(new CardLayout());
 		frame.setLocationRelativeTo(null);
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
 		
-		frame.add(loginPanel, "loginPanel");
-		frame.add(createAccountPanel, "createAccountPanel");
+		frame.getContentPane().add(loginPanel, "loginPanel");
+		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
+		// accountPanel
+		// searchPanel
+		// giftListPanel
 		
 		showLoginPanel();
 
@@ -37,12 +40,13 @@ public class MainFrame {
 		cardLayout.show(frame.getContentPane(), "createAccountPanel");
 	}
 		
-		
 	
-	// Add components such as login, account creation, search etc
-	// Ex: 
-	// LoginPanel loginPanel = new LoginPanel();
-	// add(loginPanel);
+	// showAccountScreen
+	
+	// showSearchScreen
+	
+	// showGiftListView
+
 	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
