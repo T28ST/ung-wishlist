@@ -75,32 +75,59 @@ public class CreateAccount extends JPanel {
 	*/
 	public CreateAccount(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
+		setLayout(new BorderLayout());
 		
-		JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new GridLayout(6, 2));
+		
+        
 
-		JFrame CreateFrame = new JFrame("Create Account");
+		//JFrame CreateFrame = new JFrame("Create Account");
 		
-		JTextField IDField = new JTextField();
-		JLabel IDLabel = new JLabel("email");
+		JTextField EmailField = new JTextField();
+		JLabel EmailLabel = new JLabel("Email");
+		
 		JTextField UserField = new JTextField();
 		JLabel UserLabel = new JLabel("User Name");
+		
 		JTextField FNameField = new JTextField();	
-		JLabel FNameLabel = new JLabel("Full name");	
+		JLabel FNameLabel = new JLabel("First Name");
+		
 		JTextField LNameField = new JTextField();	
-		JLabel LNameLabel = new JLabel("password");	
+		JLabel LNameLabel = new JLabel("Last Name");
+		
+		JPasswordField passField = new JPasswordField(30);
+		JLabel passLabel = new JLabel("Password");
+		
 		JButton CreateLogin = new JButton("Create Account");
 		JButton CancelButton = new JButton("Cancel");
 		
+		// Add to grid layout 
+		panel.add(FNameLabel); 	// First Name Label
+		panel.add(FNameField); 	// First Name Text Field
+		panel.add(LNameLabel); 	// Last Name Label
+		panel.add(LNameField); 	// Last Name Text Field
+		panel.add(UserLabel);  	// User name Label
+		panel.add(UserField);	 	// User Name Text Field
+		panel.add(EmailLabel); 	// Email Label
+		panel.add(EmailField); 	// Email TextField
+		panel.add(passLabel);		// Password Label
+		panel.add(passField);		// Password Field
+		panel.add(CreateLogin);
+		panel.add(CancelButton);
+		
 		CreateLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			CreateFrame.setVisible(false);
+			setVisible(false);
 			
-			String IDFieldText = IDField.getText();
+			JOptionPane.showMessageDialog(null, "Button works");
+			
+			/* Not quite set up yet
+			String EmailFieldText = EmailField.getText();
 			int IDint= Integer.parseInt(IDFieldText);
 			String UserFieldText = UserField.getText();
 			String FNameFieldText = FNameField.getText();
 			String LNameFieldText = LNameField.getText();
+			*/
 			//you can use the UserField text for when you need to recieve the values
 			}
 		});
@@ -110,16 +137,9 @@ public class CreateAccount extends JPanel {
 				mainFrame.showLoginPanel();
 			}
 		});
-		add(CreateLogin);
-		add(LNameLabel);
-		add(FNameLabel);
-		add(UserLabel);
-		add(IDLabel);
-		add(LNameField);
-		add(FNameField);
-		add(UserField);
-		add(IDField);
-		add(CancelButton);
+		
+		// Add gridlayout to main panel
+		add(panel, BorderLayout.CENTER);
 
     }
 	

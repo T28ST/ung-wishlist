@@ -19,14 +19,15 @@ public class LoginPanel extends JPanel{
 	
 	public LoginPanel(MainFrame mainFrame) { 
 		this.mainFrame = mainFrame;
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new GridLayout(4,2));
 
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameField = new JTextField();
 		JLabel passwordLabel = new JLabel("Password:");
 		passwordField = new JTextField();
+		
+		JLabel blankLabel= new JLabel("");
 
         JButton loginButton = new JButton("Login");
         loginButton.addActionListener(new ActionListener() {
@@ -55,13 +56,16 @@ public class LoginPanel extends JPanel{
         	}
         });
 	  
-       add(usernameLabel);
-       add(usernameField);
-       add(passwordLabel);
-       add(passwordField);
-       add(loginButton);
-       add(createAccountButton);
-       add(forgotPasswordButton);
+       panel.add(usernameLabel);
+       panel.add(usernameField);
+       panel.add(passwordLabel);
+       panel.add(passwordField);
+       panel.add(blankLabel);
+       panel.add(loginButton);
+       panel.add(createAccountButton);
+       panel.add(forgotPasswordButton);
+       
+       add(panel, BorderLayout.CENTER);
 
 	}
 	//Methods
