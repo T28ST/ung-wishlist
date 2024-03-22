@@ -22,7 +22,7 @@ public class LoginPanel extends JPanel{
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
-		
+
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameField = new JTextField();
 		JLabel passwordLabel = new JLabel("Password:");
