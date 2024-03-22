@@ -22,13 +22,14 @@ public class MainFrame extends JFrame {
 	public void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame frame = new JFrame("Login");
+				JFrame frame = new JFrame("Secret Shopper");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setSize(300, 150);
 				frame.setLocationRelativeTo(null);
 				
 				LoginPanel loginPanel = new LoginPanel();
 				frame.add(loginPanel);
+
 				
 				frame.setVisible(true);
 				

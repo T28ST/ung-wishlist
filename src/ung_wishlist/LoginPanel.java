@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.text.JTextComponent;
+import java.sql.SQLException;
 
 
 public class LoginPanel extends JPanel{
@@ -42,15 +43,28 @@ public class LoginPanel extends JPanel{
         	}
         } );
         
-	    forgotPasswordButton = new JButton("Forgot Password");
+	   forgotPasswordButton = new JButton("Forgot Password");
        forgotPasswordButton.addActionListener(new ActionListener() {
     	   public void actionPerformed(ActionEvent e) {
-    		   
+    		   JOptionPane.showMessageDialog(null, "Don't forget next time silly");
     	   }
        });
 	    
 	    createAccountButton = new JButton("Create Account");
-        
+        createAccountButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+				
+				CreateAccount createAccount = new CreateAccount();
+				try {
+				createAccount.main(null);
+				} catch (SQLException sql) {
+					System.out.println("SQL Exception occured " + sql.getMessage());
+				}
+				
+        	}
+        });
+	    
+	    
         add(usernameLabel);
         add(usernameField);
         add(passwordLabel);
@@ -70,7 +84,6 @@ public class LoginPanel extends JPanel{
 	// if so, login and go to account screen.
 	
 	// needs code to set user as logged in...
-	// needs 
 	public void login() {
 		
     String username = usernameField.getText();
