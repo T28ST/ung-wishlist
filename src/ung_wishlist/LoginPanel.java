@@ -1,7 +1,10 @@
 package ung_wishlist;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.text.JTextComponent;
+
 
 public class LoginPanel extends JPanel{
 	private String FName;
@@ -19,29 +22,35 @@ public class LoginPanel extends JPanel{
 	private JTextComponent lnameField;
 	private JTextComponent fnameField;
 	private JTextComponent dobField;
-
+    // forgotPasswordButton = new JButton("Forgot Password");
+    // createAccountButton = new JButton("Create Account");
 	
 	public LoginPanel() {
+		setLayout(new GridLayout(3, 2));
+		
+		JLabel usernameLabel = new JLabel("Username:");
+		usernameField = new JTextField();
+		JLabel passwordLabel = new JLabel("Password:");
+		passwordField = new JTextField();
 
-		initializeComponents();
-	}
-	
-	private void initializeComponents() {
-
-        usernameField = new JTextField();
-        passwordField = new JTextField();
-
-        loginButton = new JButton("Login");
-        forgotPasswordButton = new JButton("Forgot Password");
-        createAccountButton = new JButton("Create Account");
-
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		String username = usernameField.getText();
+        		String password = passwordField.getText();
+        		
+        		login();
+        	}
+        } );
+        
+        add(usernameLabel);
         add(usernameField);
+        add(passwordLabel);
         add(passwordField);
+        add(new JLabel()); // empty label as placeholder
         add(loginButton);
-        add(forgotPasswordButton);
-        add(createAccountButton);
-    }
 
+	}
 	//Methods
 	
 

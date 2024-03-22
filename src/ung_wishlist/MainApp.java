@@ -8,7 +8,9 @@ public class MainApp {
 		SwingUtilities.invokeLater(() -> {
 			// Create and display the main frame
 			MainFrame mainFrame = new MainFrame();
-			mainFrame.setVisible(true);
+			mainFrame.setVisible(false);
+			mainFrame.main(args);
+			
 		});
 	}
 
