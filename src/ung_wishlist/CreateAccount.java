@@ -80,6 +80,7 @@ public class CreateAccount extends JPanel {
         panel.setLayout(new BorderLayout());
 
 		JFrame CreateFrame = new JFrame("Create Account");
+		
 		JTextField IDField = new JTextField();
 		JLabel IDLabel = new JLabel("email");
 		JTextField UserField = new JTextField();
@@ -89,6 +90,7 @@ public class CreateAccount extends JPanel {
 		JTextField LNameField = new JTextField();	
 		JLabel LNameLabel = new JLabel("password");	
 		JButton CreateLogin = new JButton("Create Account");
+		JButton CancelButton = new JButton("Cancel");
 		
 		CreateLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -102,6 +104,12 @@ public class CreateAccount extends JPanel {
 			//you can use the UserField text for when you need to recieve the values
 			}
 		});
+		
+		CancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainFrame.showLoginPanel();
+			}
+		});
 		add(CreateLogin);
 		add(LNameLabel);
 		add(FNameLabel);
@@ -111,6 +119,7 @@ public class CreateAccount extends JPanel {
 		add(FNameField);
 		add(UserField);
 		add(IDField);
+		add(CancelButton);
 
     }
 	
