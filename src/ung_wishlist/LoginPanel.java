@@ -56,7 +56,7 @@ public class LoginPanel extends JPanel{
         createAccountButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
 				// Switch to Create Account Panel
-				mainFrame.showAccountPanel();
+				mainFrame.showCreateAccountPanel();
         	}
         });
        setLayout(new GridLayout(1, 2, 0, 0));

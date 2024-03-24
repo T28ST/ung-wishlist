@@ -1,5 +1,6 @@
 package ung_wishlist;
 
+import java.io.Reader;
 import java.sql.*;
 
 public class Authentication {
@@ -62,6 +63,7 @@ public class Authentication {
 						int count = resultSet.getInt("count");
 						// if there are more than 0, set exists to TRUE
 						exists = count > 0;
+						System.out.println(exists);
 						
 					}
 				}
@@ -112,7 +114,7 @@ public class Authentication {
 	}
 	
 
-	public static void createAccount(String firstName, String lastName, String emailAddress, String dateOfBirth, String username, String password) {
+	public static void createAccount(String firstName, String lastName, String emailAddress, /*String dateOfBirth,*/ String username, String password) {
 		// Saves the given information to the account table 
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
@@ -125,7 +127,7 @@ public class Authentication {
 				statement.setString(1, firstName);
 				statement.setString(2, lastName);
 				statement.setString(3, emailAddress);
-				statement.setString(4, dateOfBirth);
+				statement.setString(4, "2000-01-01");
 				statement.setString(5, username);
 				statement.setString(6, password);
 				

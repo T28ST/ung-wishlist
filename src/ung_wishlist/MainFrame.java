@@ -8,6 +8,7 @@ public class MainFrame {
 	private JFrame frame;
 	private JPanel loginPanel;
 	private JPanel createAccountPanel;
+	private JPanel accountPanel;
 	
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
@@ -35,13 +36,17 @@ public class MainFrame {
 		cardLayout.show(frame.getContentPane(), "loginPanel");
 	}
 	
-	public void showAccountPanel() {
+	public void showCreateAccountPanel() {
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "createAccountPanel");
 	}
 		
 	
 	// showAccountScreen
+	public void showAccountScreen() {
+		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
+		cardLayout.show(frame.getContentPane(), "accountPanel");
+	}
 	
 	// showSearchScreen
 	
