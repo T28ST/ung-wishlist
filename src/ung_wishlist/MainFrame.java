@@ -18,7 +18,7 @@ public class MainFrame {
 		frame.setLocationRelativeTo(null);
 		
 		loginPanel = new LoginPanel(this);
-		createAccountPanel = new CreateAccount(this);
+		createAccountPanel = new createAccount(this);
 		
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
