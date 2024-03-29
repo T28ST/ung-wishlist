@@ -3,12 +3,14 @@ package ung_wishlist;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 
 public class MainFrame {
 	private JFrame frame;
 	private JPanel loginPanel;
 	private JPanel createAccountPanel;
 	private JPanel accountPanel;
+	private ResultSet currentUser;
 	
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
@@ -19,10 +21,11 @@ public class MainFrame {
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
+		accountPanel = new  AccountScreen(this, null);
 		
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
-		// accountPanel
+		frame.getContentPane().add(accountPanel, "accountPanel");
 		// searchPanel
 		// giftListPanel
 		
@@ -43,7 +46,8 @@ public class MainFrame {
 		
 	
 	// showAccountScreen
-	public void showAccountScreen() {
+	public void showAccountScreen(User currentUser) {
+		accountPanel = new AccountScreen(this, currentUser);
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "accountPanel");
 	}
@@ -51,6 +55,19 @@ public class MainFrame {
 	// showSearchScreen
 	
 	// showGiftListView
+	
+	
+	// Set Current User
+	// sets the user when login is successful
+	public void setCurrentUser(ResultSet user) {
+		currentUser = user;
+	}
+	
+	// Get User Information
+	// gets the information for user that is logged in
+	public ResultSet getUserInfo() {
+		return currentUser;
+	}
 
 	
 	public static void main(String[] args) {

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.text.JTextComponent;
-import java.sql.SQLException;
+import java.sql.*;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -33,13 +33,15 @@ public class LoginPanel extends JPanel{
 		
 		JLabel blankLabel= new JLabel("");
 
+		
         JButton loginButton = new JButton("Login");
         loginButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		String username = usernameField.getText();
         		String password = passwordField.getText();
         		
-        		login();
+        		login(username, password);
+
         	}
         } );
         
@@ -87,45 +89,20 @@ public class LoginPanel extends JPanel{
        add(panel);
 
 	}
-	//Methods
-	
 
-	// Login
-	// pulls information from login panel
-	// checks that they are correct
-	// if so, login and go to account screen.
-	
-	// needs code to set user as logged in...
-	public void login() {
+	public void login(String username, String password) {
 		
-    String username = usernameField.getText();
-    String password = passwordField.getText();
+		// Checks login, returns null if password is incorrect or no login
+		User currentUser = Authentication.CheckLogin(username, password);
+		
+		if (currentUser != null ) {
+			JOptionPane.showMessageDialog(this, "Weclome back " + currentUser.getFirstName() + "!");
+			mainFrame.showAccountScreen(currentUser);
+			
+		} else {
+			JOptionPane.showMessageDialog(this, "Invalid username or password");
+		}
+	}
 
-    
-    // Testing login logic
-    if (username.equals("admin") && password.equals("admin")) {
-    	JOptionPane.showMessageDialog(null, "Login test successful");
-    } else {
-    	JOptionPane.showMessageDialog(null, "Login Incorrect, Test Successful");
-   }
-    
-    /*
-     * Login for successful login
-     * Needs work to actually log the user in.
-     * 
-     *   boolean isAuthenticated = Authentication.isPasswordCorrect(username, password);
-    if (isAuthenticated) {
-        JOptionPane.showMessageDialog(this, "Login successful!");
-        usernameField.setText("");
-        passwordField.setText("");
-        // Open account screen
-    } 
-    	else {
-        JOptionPane.showMessageDialog(this, "Invalid username or password!", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    *
-    *
-    */
-}
 }
 

@@ -8,16 +8,12 @@ import javax.swing.*;
 
 
 public class AccountScreen extends JPanel{
-	// Components
-	// Create List -> List view
-	// Open List -> List view
-	// Delete List
-	// Edit account details:
-	//		F/L name, Pass, Email, username
-	//
+	private MainFrame mainFrame;  
 	
-	
-	public AccountScreen() {
+	// Uses the users username to determine what information to access
+	// Could use userId in future, not set in stone.
+	public AccountScreen(MainFrame mainFrame, User currentUser) {
+		this.mainFrame = mainFrame;
 		
 	}
 	

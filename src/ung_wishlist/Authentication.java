@@ -83,7 +83,7 @@ public class Authentication {
 		
 	}
 
-	public static boolean CheckLogin(String username, String password) {
+	public static User CheckLogin(String username, String password) {
 		boolean check = false;
 		
 		// Connect to DB and search for users and check against password
@@ -91,17 +91,28 @@ public class Authentication {
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
 			// Create SQL string
-			String sql = "SELECT password FROM account WHERE username = ?";
+			// Checks if given password matches password for account with the username given.
+			String sql = "SELECT * FROM account WHERE username = ?";
+			
 			
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				
 				statement.setString(1, username);
-				try(ResultSet resultSet = statement.executeQuery()) {
-					if (resultSet.next()) {
-						String storedPassword = resultSet.getString("password");
-						// Optional password decryption here.
+				
+				try(ResultSet rs = statement.executeQuery()) {
+					
+					if (rs.next()) {
 						
+						String storedPassword = rs.getString("password");
+						// Optional password decryption here.
+						// Could include error message for failed logins.
 						// Compare passwords directly
-						return storedPassword.equals(password);
+						//
+						if ( storedPassword.equals(password)) {
+							return new User(rs.getLong("account_id"), rs.getString("username"), rs.getString("f_name"), rs.getString("l_name"), rs.getString("email"));
+						} else {
+							return null;
+						}
 					}
 				}
 			}		
@@ -110,7 +121,7 @@ public class Authentication {
 		}
 		// hashing algorithm for password optional
 		
-		return check;
+		return null;
 	}
 	
 
