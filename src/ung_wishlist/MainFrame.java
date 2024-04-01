@@ -21,7 +21,7 @@ public class MainFrame {
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
-		accountPanel = new  AccountScreen(this, null);
+		accountPanel = new AccountScreen(this, null);
 		
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
