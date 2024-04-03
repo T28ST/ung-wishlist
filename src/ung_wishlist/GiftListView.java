@@ -13,10 +13,33 @@ public class GiftListView extends JPanel {
 	
 	public GiftListView() {
 		// Initialize
+		
 	}
 	
 	// Methods
 	
+	
+	// method to open create list
+	public void OpenList() {
+	
+	}
+	// method to open edit list
+	public void EditList() {
+		
+	}
+	// method to view list (Guest)
+	public void GuestOpen() {
+		
+	}
+}
+
+	abstract class State {
+	
+}
+	
+	class ViewState extends State{
+		
+	}
 	// Opened from create list
 	// Opened from edit list
 	// Opened from view list ( User or Guest )
