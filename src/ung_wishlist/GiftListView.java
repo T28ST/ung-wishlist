@@ -10,9 +10,13 @@ import javax.swing.*;
 public class GiftListView extends JPanel {
 	
 	// Components
+	String ListName;
 	
-	public GiftListView() {
+	private User currentUser;
+	
+	public GiftListView(User currentUser) {
 		// Initialize
+		this.currentUser = currentUser;
 		
 	}
 	
@@ -35,11 +39,15 @@ public class GiftListView extends JPanel {
 
 	abstract class State {
 	
+		//protected field List: GiftList
+		
+		
 }
 	
 	class ViewState extends State{
 		
 	}
+	
 	// Opened from create list
 	// Opened from edit list
 	// Opened from view list ( User or Guest )
