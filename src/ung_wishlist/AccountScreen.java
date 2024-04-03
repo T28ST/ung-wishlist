@@ -1,6 +1,10 @@
 package ung_wishlist;
 
 import javax.swing.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 // Class purpose: 
 // Account options with gifts list here and buttons to create a new one
@@ -26,3 +30,4 @@ public class AccountScreen extends JPanel{
 	// Log out
 	
 }
+
