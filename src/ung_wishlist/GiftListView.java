@@ -22,7 +22,7 @@ public class GiftListView extends JPanel {
 	public void EditList() {
 		
 	}
-	// method to view list ( User or Guest )
+	// method to view list (Guest)
 	public void GuestOpen() {
 		
 	}
