@@ -13,21 +13,34 @@ import java.util.List;
 
 public class AccountScreen extends JPanel{
 	private MainFrame mainFrame;  
+	private User currentUser; 
 	
-	// Uses the users username to determine what information to access
-	// Could use userId in future, not set in stone.
+	// Passed currentUser class from LoginPanel stores
 	public AccountScreen(MainFrame mainFrame, User currentUser) {
 		this.mainFrame = mainFrame;
+		this.currentUser = currentUser;
+		
+		// UI here 
+		// Display User information (name, username etc...)
+		// Display Lists user has created
+		// Logout button
+		// Create list button
+		// Edit list button - Opens selected list to edit
+		// Delete list button/function
+		// Search for user button - Opens search screen
 		
 	}
 	
 	
 	
 	// Methods
-
-	// Change Account Details (pass, user, name, email)
 	
-	// Log out
+		// Logout method
+			// Clear store user information in User class 
+			// Return to Login screen
+	
+		// Change Account Details (pass, user, name, email)
+	
 	
 }
 
