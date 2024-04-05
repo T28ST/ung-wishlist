@@ -20,6 +20,7 @@ public class GiftListView extends JPanel {
 
 		// set default state as view
 		this.mainFrame = mainFrame;
+		this.state = null;
 		
 		// UI here
 		
@@ -28,10 +29,19 @@ public class GiftListView extends JPanel {
 	}
 
 	// SetState method
+	
+	public void setState(State newState) {
+        this.state = newState;
+        
+	}
 		// State object is passed to this method from other class 
 		// set GiftListView's State object to the passed object
-	
+			
 	// SaveList method
+	
+	public void saveList(String listName) {
+		this.list = Authentication.createList(listName);
+	}
 		// save list with name/id sent from account screen for display or editing
 		// get list from DB as ResultSet (call method in Authentication that returns ResultList)
 	
@@ -40,14 +50,10 @@ public class GiftListView extends JPanel {
 	
 		while (resultSet.next()) {
 			
-			int id = resultSet.getInt("id");
+			
 			String name = resultSet.getString("name");
-			String desc = resultSet.getString("description");
-			int count = resultSet.getInt("count");
-			String link = resultSet.getString("link");
 			boolean isPurchased = resultSet.getBoolean("purchased?");
-			double price = resultSet.getDouble("price");
-	
+			
 			// Create a new GiftItem object and add it to the list
 			GiftItem giftItem = new GiftItem(id, name, desc, count, link, isPurchased, price);
 			giftList.add(giftItem);
