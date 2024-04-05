@@ -69,7 +69,7 @@ public class LoginPanel extends JPanel{
        logo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
        
        JLabel Icon = DefaultComponentFactory.getInstance().createTitle("");
-       Icon.setIcon(new ImageIcon("C:\\Git\\ung-wishlist\\img\\gift.png"));
+       Icon.setIcon(new ImageIcon("\\img\\gift.png"));
        logo.add(Icon);
        
        JLabel appName = DefaultComponentFactory.getInstance().createLabel("Secret Shopper");
