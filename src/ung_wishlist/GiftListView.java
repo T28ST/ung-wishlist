@@ -40,6 +40,8 @@ public class GiftListView extends JPanel {
 	// SaveList method
 	
 	public void saveList(String listName) {
+		if (list != null)
+			
 		this.list = Authentication.createList(listName);
 	}
 		// save list with name/id sent from account screen for display or editing
@@ -62,8 +64,18 @@ public class GiftListView extends JPanel {
 	
 	// OpenInViewMode
 		// SetState(view)
+	public void openInViewMode() {
+		setState(new ViewState(this)); // Assuming you have a State enum with VIEW mode
+    }
+
 	
 	// OpenInEditMode (listID)
+	public void openInEditMode(String listID) {
+        if (list != null) { // Check if list is not null (indicating editing)
+            saveList(listID); // Save the list with the given listID
+        }
+        setState(new EditState(this)); // Set the state to edit mode
+    }
 		// if list is not null (editing list)
 			// SaveList(listID)
 		// SetState(edit)
@@ -93,33 +105,73 @@ public class GiftListView extends JPanel {
 		
 }
 	
-	class ViewState extends State {
+		class ViewState extends State {
 	
+		public ViewState(GiftListView giftListView) {
+		    super(giftListView);
+		}
+
 		// Define deleteItem
-			// no function in view mode
-		
-		// Define addItem
-			// no function in view mode
-		
-		// Define editItem
-			// no function in view mode
-		
-		// Define markPurchased();
-			// User can mark an item purchased
+	    // No function in view mode
+	    public void deleteItem() {
+	        // No action in view mode
+	        System.out.println("Cannot delete item in view mode.");
+	    }
+
+	    // Define addItem
+	    // No function in view mode
+	    public void addItem() {
+	        // No action in view mode
+	        System.out.println("Cannot add item in view mode.");
+	    }
+
+	    // Define editItem
+	    // No function in view mode
+	    public void editItem() {
+	        // No action in view mode
+	        System.out.println("Cannot edit item in view mode.");
+	    }
+
+	    // Define markPurchased
+	    // User can mark an item purchased
+	    public void markPurchased() {
+	        // Perform action to mark item as purchased
+	        System.out.println("Item marked as purchased.");
+	    }
 	}
+	
 	
 	class EditState extends State {
 		
+		public EditState(GiftListView giftListView) {
+		    super(giftListView);
+		}
 		// Define deleteItem
-			// deletes item from list
-	
-		// Define addItem
-			// adds item to list
-		
-		// Define editItem
-			// edit item attributes already in list
-		
-		// Define markPurchased();
-			// User can mark an item purchased
+	    // Deletes item from list
+	    public void deleteItem() {
+	        // Perform action to delete item from list
+	        System.out.println("Item deleted from list.");
+	    }
+
+	    // Define addItem
+	    // Adds item to list
+	    public void addItem() {
+	        // Perform action to add item to list
+	        System.out.println("Item added to list.");
+	    }
+
+	    // Define editItem
+	    // Edit item attributes already in list
+	    public void editItem() {
+	        // Perform action to edit item attributes already in list
+	        System.out.println("Item attributes edited.");
+	    }
+
+	    // Define markPurchased
+	    // User can mark an item purchased
+	    public void markPurchased() {
+	        // Perform action to mark item as purchased
+	        System.out.println("Item marked as purchased.");
+	    }
 	}
 	
