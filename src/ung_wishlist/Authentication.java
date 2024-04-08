@@ -215,6 +215,22 @@ public class Authentication {
 		}
 		
 	}
+
+	public static void saveGifts(long ID, String listName, String[] gifts) {
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			Array giftArray = connection.createArrayOf("text", gifts);
+			
+			String sql = "INSERT INTO gifts VALUES (?)";
+			
+		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public static void getUserLists(long ID) {
 		
@@ -228,9 +244,9 @@ public class Authentication {
 			 * JOIN account a ON l.account_id = a.account_id;
 			 */
 			
-			
 			String sql = ""; 
 			
+				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.awt.*;
 import javax.swing.*;
 
 public class GiftListView extends JPanel {
@@ -14,15 +14,21 @@ public class GiftListView extends JPanel {
 	private MainFrame mainFrame; 
 	private State state;
 	private ResultSet list;
+	private User currentUser;
 	
-	public GiftListView(MainFrame mainFrame) {
+	
+	public GiftListView(MainFrame mainFrame, User currentUser) {
 		// Initialize
+		setSize(640, 480);
 
 		// set default state as view
 		this.mainFrame = mainFrame;
 		this.state = null;
+		this.currentUser = currentUser;
 		
 		// UI here
+		
+
 		
 	
 		

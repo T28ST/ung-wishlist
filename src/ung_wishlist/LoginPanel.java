@@ -18,12 +18,13 @@ public class LoginPanel extends JPanel{
 	private JTextField passwordField;
 	private JButton forgotPasswordButton;
 	private JButton createAccountButton;
-
+	
 
 	
 	
 	public LoginPanel(MainFrame mainFrame) { 
 		this.mainFrame = mainFrame;
+		setSize(640, 480);
 		JPanel panel = new JPanel(new GridLayout(0,1));
 
 		JLabel usernameLabel = new JLabel("Username:");

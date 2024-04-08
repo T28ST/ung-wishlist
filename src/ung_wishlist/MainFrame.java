@@ -15,7 +15,7 @@ public class MainFrame {
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(393, 242);
+		frame.setSize(640, 480);
 		frame.getContentPane().setLayout(new CardLayout());
 		frame.setLocationRelativeTo(null);
 		
