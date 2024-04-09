@@ -3,6 +3,9 @@ package ung_wishlist;
 import java.io.Reader;
 import java.sql.*;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+
 public class Authentication {
 	static final String DB_URL = "jdbc:postgresql://ung-swe-7079.g8z.gcp-us-east1.cockroachlabs.cloud:26257/ung_swe";
 	static final String DB_USER = "Team_2";
@@ -194,11 +197,12 @@ public class Authentication {
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			String sql = "INSERT INTO list (list_name) VALUES (?);"; 
+			String sql = "INSERT INTO list (list_name, account_id) VALUES (?, ?);"; 
 			
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
 				
 				statement.setString(1, listName);
+				statement.setLong(2, ID);
 				
 				int rowsInserted = statement.executeUpdate();
 				
@@ -216,13 +220,43 @@ public class Authentication {
 		
 	}
 
-	public static void saveGifts(long ID, String listName, String[] gifts) {
+	// Deletes a list with the given name that belongs to the logged in user.
+	public static void deleteList(long ID, String listName) {
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			Array giftArray = connection.createArrayOf("text", gifts);
+			String sql = "DELETE FROM list WHERE list_name = ? AND account_id = ?";
 			
-			String sql = "INSERT INTO gifts VALUES (?)";
+			try(PreparedStatement statement = connection.prepareStatement(sql)){
+				
+				statement.setString(1,listName);
+				statement.setLong(2, ID);
+				
+				int rowsDeleted = statement.executeUpdate();
+				
+				if (rowsDeleted > 0) {
+					System.out.println("Rows deleted successfully");
+				} else {
+					System.out.println("No rows deleted.");
+				}
+					
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	// Saves a gift to the database
+	// TODO
+	public static void saveGift(long ID, String listName, String giftName, float giftPrice, String giftDesc, String giftLink) {
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			
+			String sql = "";
 			
 		
 			
@@ -232,24 +266,59 @@ public class Authentication {
 		
 	}
 	
-	public static void getUserLists(long ID) {
+	public static ResultSet getUserLists(long ID, JList<String> list) {
+		ResultSet resultSet = null;
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+						
+			String sql = "SELECT l.list_name FROM account a JOIN list l ON a.account_id = l.account_id WHERE a.account_id = ?"; 
 			
-			/*
-			 * Starting SQL, not final.
-			 * 
-			 * SELECT l.list_name
-			 * FROM list l
-			 * JOIN account a ON l.account_id = a.account_id;
-			 */
-			
-			String sql = ""; 
-			
+			try(PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+				statement.setLong(1, ID);
+				resultSet = statement.executeQuery();
+				
+				if (!resultSet.next()) {
+					resultSet = null;					
+				} else {
+					resultSet.beforeFirst();
+				}
+				
+				DefaultListModel<String> model = new DefaultListModel<>();
+				
+				try {
+					boolean resultSetEmpty = true;
+					
+					while (resultSet.next() ) {
+						String data = resultSet.getString("list_name");
+						model.addElement(data);
+						resultSetEmpty = false;
+					}
+					
+					list.setModel(model);
+					
+					if (resultSetEmpty) {
+						model.addElement("No Data Available.");
+					}
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				
+			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		return resultSet;
 	}
 	
 }

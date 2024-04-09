@@ -21,11 +21,11 @@ public class MainFrame {
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
-		accountPanel = new  AccountScreen(this, null);
+
 		
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
-		frame.getContentPane().add(accountPanel, "accountPanel");
+
 		// searchPanel
 		// giftListPanel
 		
@@ -48,6 +48,7 @@ public class MainFrame {
 	// showAccountScreen
 	public void showAccountScreen(User currentUser) {
 		accountPanel = new AccountScreen(this, currentUser);
+		frame.getContentPane().add(accountPanel, "accountPanel");
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "accountPanel");
 	}
