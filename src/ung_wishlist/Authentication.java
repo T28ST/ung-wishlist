@@ -281,7 +281,7 @@ public class Authentication {
 					resultSet = null;					
 				} else {
 					resultSet.beforeFirst();
-				}
+				
 				
 				DefaultListModel<String> model = new DefaultListModel<>();
 				
@@ -311,7 +311,7 @@ public class Authentication {
 						e.printStackTrace();
 					}
 				}
-				
+				}
 			}
 				
 		} catch (SQLException e) {
