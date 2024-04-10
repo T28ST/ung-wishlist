@@ -13,6 +13,9 @@ import java.awt.Insets;
 import java.awt.FlowLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -149,7 +152,19 @@ public class AccountScreen extends JPanel{
 		}
 		
 		rightPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-		
+		list.addMouseListener((MouseListener) new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        if (e.getClickCount() == 1) { // Check for single click
+		            int index = list.locationToIndex(e.getPoint());
+		            if (index != -1) {
+		                String selectedList = list.getModel().getElementAt(index);
+		                // Show the UserInterfaceList for the selected list
+		                mainFrame.showEditList();
+		            }
+		        }
+		    }
+		});
 
 		
 		// Button actions
