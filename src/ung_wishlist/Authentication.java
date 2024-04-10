@@ -331,7 +331,7 @@ public class Authentication {
 					String description = resultSet.getString("gift_description");
 					String price = resultSet.getString("gift_price");
 					String link = resultSet.getString("gift_link");
-					String purchased = resultSet.getString("purchased");
+					Boolean purchased = resultSet.getBoolean("purchased");
 					
 					model.addRow(new Object[] {name, description, price, link, purchased});
 				}
