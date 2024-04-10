@@ -32,37 +32,6 @@ public abstract class GiftListState extends JPanel {
 			
 	// SaveList method
 	
-	public void saveList(String listName) {
-		
-	}
-		// save list with name/id sent from account screen for display or editing
-		// get list from DB as ResultSet (call method in Authentication that returns ResultList)
-	
-		/* public List<GiftItem> retrieveGiftList(ResultSet resultSet) throws SQLException {
-		List<GiftItem> giftList = new ArrayList<>();
-	
-		while (resultSet.next()) {
-			
-			
-			String name = resultSet.getString("name");
-			boolean isPurchased = resultSet.getBoolean("purchased?");
-			
-			// Create a new GiftItem object and add it to the list
-			GiftItem giftItem = new GiftItem(id, name, desc, count, link, isPurchased, price);
-			giftList.add(giftItem);
-		}*/
-		// cycle through ResultSet, save to array
-	
-	// OpenInViewMode
-		// SetState(view)
-	
-	// OpenInEditMode (listID)
-		// if list is not null (editing list)
-			// SaveList(listID)
-		// SetState(edit)
-	
-	// UI Methods
-		// UI methods delegate execution to the active state
 
 
 }

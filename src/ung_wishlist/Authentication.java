@@ -5,6 +5,7 @@ import java.sql.*;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.table.DefaultTableModel;
 
 public class Authentication {
 	static final String DB_URL = "jdbc:postgresql://ung-swe-7079.g8z.gcp-us-east1.cockroachlabs.cloud:26257/ung_swe";
@@ -250,7 +251,6 @@ public class Authentication {
 	}
 	
 	// Saves a gift to the database
-	// TODO
 	public static void saveGift(long ID, String listName, String giftName, float giftPrice, String giftDesc, String giftLink) {
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
@@ -266,7 +266,7 @@ public class Authentication {
 		
 	}
 	
-	public static ResultSet getUserLists(long ID, JList<String> list) {
+	public static void getUserLists(long ID, JList<String> list) {
 		ResultSet resultSet = null;
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
@@ -277,12 +277,7 @@ public class Authentication {
 				statement.setLong(1, ID);
 				resultSet = statement.executeQuery();
 				
-				if (!resultSet.next()) {
-					resultSet = null;					
-				} else {
-					resultSet.beforeFirst();
-				
-				
+				resultSet.beforeFirst();				
 				DefaultListModel<String> model = new DefaultListModel<>();
 				
 				try {
@@ -311,14 +306,40 @@ public class Authentication {
 						e.printStackTrace();
 					}
 				}
-				}
+			
 			}
 				
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		return resultSet;
 	}
-	
+
+	public static void getListGifts(long ID, DefaultTableModel model) {
+		ResultSet resultSet = null;
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			String sql = "SELECT g.gift_title, g.gift_desc, g.gift_price, g.gift_link, g.purchased FROM list l JOIN gift g ON g.list_id = l.list_id WHERE l.list_id = ?"; 
+			
+			try(PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+				statement.setLong(1, ID);
+				resultSet = statement.executeQuery();
+				
+				
+				while (resultSet.next()) {
+					String name = resultSet.getString("gift_name");
+					String description = resultSet.getString("gift_description");
+					String price = resultSet.getString("gift_price");
+					String link = resultSet.getString("gift_link");
+					String purchased = resultSet.getString("purchased");
+					
+					model.addRow(new Object[] {name, description, price, link, purchased});
+				}
+			} 
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
