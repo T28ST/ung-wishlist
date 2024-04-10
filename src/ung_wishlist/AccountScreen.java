@@ -25,6 +25,17 @@ import java.beans.PropertyChangeEvent;
 public class AccountScreen extends JPanel{
 	private MainFrame mainFrame;  
 	private User currentUser; 
+	private String searchedName;
+	
+
+	public String getSearchedName() {
+		return searchedName;
+	}
+
+	public void setSearchedName(String searchedName) {
+		this.searchedName = searchedName;
+	}
+	
 	ResultSet resultSet = null;
 	
 	// Passed currentUser class from LoginPanel stores
@@ -106,7 +117,7 @@ public class AccountScreen extends JPanel{
 		gbc_searchField.gridy = 6;
 		searchPanel.add(searchField, gbc_searchField);
 		JButton searchButton = new JButton("Search");
-
+		
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
 		gbc_searchButton.insets = new Insets(0, 0, 0, 5);
 		gbc_searchButton.fill = GridBagConstraints.BOTH;
@@ -126,7 +137,9 @@ public class AccountScreen extends JPanel{
 		noListsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		noListsLabel.setEnabled(false);
 		rightPanel.add(noListsLabel, BorderLayout.SOUTH);
-		
+		JButton backButton = new JButton("Back");
+		backButton.setEnabled(false); // Initially disabled until a search is performed
+		rightPanel.add(backButton, BorderLayout.SOUTH);
 		JList<String> list = new JList<>();
 		Authentication.getUserLists(currentUser.getId(), list);
 		
@@ -184,9 +197,40 @@ public class AccountScreen extends JPanel{
 		
 		// Search Users
 		searchButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Not functioning");
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        String searchedName = searchField.getText();
+		        // Update the right panel with the searched person's name
+	            listLabel.setText("Lists for " + searchedName);
+	            // Generating a random list name for demonstration purposes
+	            String randomListName = "Random List"; // Replace with your actual logic to generate a random list name
+	            // Add the random list name to the JList
+	            DefaultListModel<String> model = new DefaultListModel<>();
+	            model.addElement(randomListName);
+	            list.setModel(model);
+	            // Clear the noListsLabel if there are lists available
+	            noListsLabel.setText("");
+	            noListsLabel.setEnabled(false);
+	            createListButton.setEnabled(false);
+	            editListButton.setEnabled(false);
+	            deleteListButton.setEnabled(false);
+	            // Show back button
+	            backButton.setEnabled(true);
+		    }
+		});
+		backButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        // Clear the search field
+		        searchField.setText("");
+		        // Enable edit buttons
+		        createListButton.setEnabled(true);
+		        editListButton.setEnabled(true);
+		        deleteListButton.setEnabled(true);
+		        // Hide back button
+		        backButton.setEnabled(false);
+		        // Refresh right panel with the original user's data
+		        // You may need to implement a method to reload the original user's data
+		        // and update the right panel accordingly
+		    }
 		});
 	}
 	
