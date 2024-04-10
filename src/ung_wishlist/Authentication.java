@@ -253,16 +253,14 @@ public class Authentication {
 	// Saves a gift to the database
 	public static void saveGift(long ID, String listName, String giftName, float giftPrice, String giftDesc, String giftLink) {
 		
-		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+		//try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
 			
-			String sql = "";
+			//String sql = "";
 			
 		
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+			System.out.println(giftName);
+		
 		
 	}
 	

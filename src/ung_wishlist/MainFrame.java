@@ -11,7 +11,7 @@ public class MainFrame {
 	private JPanel createAccountPanel;
 	private JPanel accountPanel;
 	private ResultSet currentUser;
-	
+	private JPanel UserInterfaceList;
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -21,8 +21,8 @@ public class MainFrame {
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
-
-		
+		UserInterfaceList = new UserInterfaceList(this);
+		frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
 
@@ -56,7 +56,10 @@ public class MainFrame {
 	// showSearchScreen
 	
 	// showGiftListView
-	
+	public void showEditList() {
+		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
+		cardLayout.show(frame.getContentPane(), "UserInterfaceList");
+	}
 	
 	// Set Current User
 	// sets the user when login is successful

@@ -165,7 +165,7 @@ public class AccountScreen extends JPanel{
 		// Edit list
 		editListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Not functioning");
+				mainFrame.showEditList();
 			}
 		});
 		// Delete List
