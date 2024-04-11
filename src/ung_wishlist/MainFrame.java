@@ -25,6 +25,9 @@ public class MainFrame {
 		UserInterfaceList = new UserInterfaceList();
 		SearchUserLists = new SearchUserLists(null, null);
 		frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
+
+		accountPanel = new AccountScreen(this, null);
+
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
 		frame.getContentPane().add(SearchUserLists, "searchUserList");
