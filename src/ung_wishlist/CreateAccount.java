@@ -26,7 +26,6 @@ public class CreateAccount extends JPanel {
 	public CreateAccount(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		setLayout(new BorderLayout());
-		setSize(640, 480);
 		
 		JPanel panel = new JPanel(new GridLayout(6, 2));
 

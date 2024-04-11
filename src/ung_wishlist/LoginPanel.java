@@ -18,13 +18,12 @@ public class LoginPanel extends JPanel{
 	private JTextField passwordField;
 	private JButton forgotPasswordButton;
 	private JButton createAccountButton;
-	
+
 
 	
 	
 	public LoginPanel(MainFrame mainFrame) { 
 		this.mainFrame = mainFrame;
-		setSize(640, 480);
 		JPanel panel = new JPanel(new GridLayout(0,1));
 
 		JLabel usernameLabel = new JLabel("Username:");
@@ -70,7 +69,7 @@ public class LoginPanel extends JPanel{
        logo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
        
        JLabel Icon = DefaultComponentFactory.getInstance().createTitle("");
-       Icon.setIcon(new ImageIcon("\\img\\gift.png"));
+       Icon.setIcon(new ImageIcon("C:\\Git\\ung-wishlist\\img\\gift.png"));
        logo.add(Icon);
        
        JLabel appName = DefaultComponentFactory.getInstance().createLabel("Secret Shopper");
