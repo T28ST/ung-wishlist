@@ -3,11 +3,11 @@ package ung_wishlist;
 
 // Class for storing the currently logged in user
 public class User {
-	private long id;
-	private String username;
-	private String firstName;
-	private String lastName;
-	private String Email;
+	private long id = 0;
+	private String username = "";
+	private String firstName = "";
+	private String lastName = "";
+	private String Email = "";
 	
 
 	
@@ -34,5 +34,17 @@ public class User {
 	public String getLastName() {
 		return lastName;
 	}
+	
+	public String getEmail() {
+		return Email;
+	}
 
+	public void logout() {
+		username = "";
+		firstName = "";
+		lastName = "";
+		Email = "";
+		id = 0;
+	}
+	
 }
