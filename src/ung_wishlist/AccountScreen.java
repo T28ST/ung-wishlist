@@ -104,12 +104,12 @@ public class AccountScreen extends JPanel{
 		
 		// User Search 
 		
-		JLabel lblNewLabel = new JLabel("User Search");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 3;
-		searchPanel.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel searchLabel = new JLabel("User Search");
+		GridBagConstraints gbc_searchLabel = new GridBagConstraints();
+		gbc_searchLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_searchLabel.gridx = 1;
+		gbc_searchLabel.gridy = 3;
+		searchPanel.add(searchLabel, gbc_searchLabel);
 		
 		JTextField searchField = new JTextField();
 		
