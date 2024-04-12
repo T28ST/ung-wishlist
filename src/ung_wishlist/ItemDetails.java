@@ -1,16 +1,28 @@
 package ung_wishlist;
 
 class ItemDetails {
+	private long ID;
     private String name;
     private String description;
     private String link;
     private double price;
+    private boolean purchased;
 
-    public ItemDetails(String name, String description, String link, double price) {
-        this.name = name;
+    public ItemDetails(Long ID, String name, String description, String link, double price, boolean purchased) {
+        this.ID = ID;
+    	this.name = name;
         this.description = description;
         this.link = link;
         this.price = price;
+        this.purchased = purchased;
+    }
+    
+    public long getID() {
+    	return ID;
+    }
+    
+    public void setID(long ID) {
+    	this.ID = ID;
     }
 
     public String getName() {
@@ -43,5 +55,13 @@ class ItemDetails {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+    
+    public void setPurchased(boolean purchased) {
+    	this.purchased = purchased;
+    }
+    
+    public boolean getPurchased() {
+    	return purchased;
     }
 }

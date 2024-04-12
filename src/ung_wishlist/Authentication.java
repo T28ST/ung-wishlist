@@ -252,13 +252,60 @@ public class Authentication {
 	}
 	
 	// Saves a gifts in a list to the database
-	public static void saveListGifts() {
+	public static void saveListGifts(long listID, ArrayList<ItemDetails> gifts) {
 		
 		// gifts passed as object
 		// account id passed
 		// for each object:
 		// Check if gift id exists
-		// save row in db assing to account
+		// save row in db accessing to account
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			for (ItemDetails gift : gifts) {
+				
+				String selectQuery = "SELECT * FROM gift WHERE list_id = ?";
+				PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+				selectStatement.setLong(1, listID);
+				ResultSet resultSet = selectStatement.executeQuery();
+				
+				if (resultSet.next()) {
+					// If there are items in the result set
+					// Update them with new information
+					String updateQuery = "UPDATE gift SET gift_title = ?, gift_desc = ?, gift_price = ?, gift_link = ?, purchased = ? WHERE gift_id = ?";
+					PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+					updateStatement.setString(1, gift.getName());
+					updateStatement.setString(2, gift.getDescription());
+					updateStatement.setDouble(3, gift.getPrice());
+					updateStatement.setString(4, gift.getLink());
+					updateStatement.setBoolean(5, gift.getPurchased());
+					updateStatement.setLong(6, gift.getID());
+					updateStatement.executeUpdate();
+					System.out.println("Item " + gift.getID() + " " + gift.getName() +" updated.");
+					
+				} else {
+					// If the item doesn't already exist
+					// add to table
+					String insertQuery = "INSERT INTO gift (gift_title, gift_desc, gift_price, gift_link, purchased) VALUES (?,?,?,?,?)";
+					PreparedStatement insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+					insertStatement.setString(1, gift.getName());
+					insertStatement.setString(2, gift.getDescription());
+					insertStatement.setDouble(3, gift.getPrice());
+					insertStatement.setString(4, gift.getLink());
+					insertStatement.setBoolean(5, gift.getPurchased());
+					insertStatement.executeUpdate();
+					
+					ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+					if (generatedKeys.next()) {
+						long id = generatedKeys.getLong(1);
+						System.out.println("New gift inserted with ID " + id);
+					}
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		
 		//try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
