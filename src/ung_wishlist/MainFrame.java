@@ -22,11 +22,10 @@ public class MainFrame {
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
-		UserInterfaceList = new UserInterfaceList();
+		
 		SearchUserLists = new SearchUserLists(null, null);
 		frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
 
-		accountPanel = new AccountScreen(this, null);
 
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
@@ -53,6 +52,7 @@ public class MainFrame {
 	// showAccountScreen
 	public void showAccountScreen(User currentUser) {
 		accountPanel = new AccountScreen(this, currentUser);
+		
 		frame.getContentPane().add(accountPanel, "accountPanel");
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "accountPanel");
@@ -61,7 +61,9 @@ public class MainFrame {
 	// showSearchScreen
 	
 	// showGiftListView
-	public void showEditList() {
+	public void showEditList(String listName) {
+		long listID = Authentication.getListID(listName);
+		UserInterfaceList = new UserInterfaceList(listID);
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "UserInterfaceList");
 	}

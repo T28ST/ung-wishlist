@@ -2,6 +2,8 @@ package ung_wishlist;
 
 import java.io.Reader;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -312,32 +314,41 @@ public class Authentication {
 		}
 	}
 
-	public static void getListGifts(long ID, DefaultTableModel model) {
+	public static void getListGifts(long ID, List<GiftItem> list) {
 		ResultSet resultSet = null;
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
+		
 			String sql = "SELECT g.gift_title, g.gift_desc, g.gift_price, g.gift_link, g.purchased FROM list l JOIN gift g ON g.list_id = l.list_id WHERE l.list_id = ?"; 
 			
 			try(PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
 				statement.setLong(1, ID);
 				resultSet = statement.executeQuery();
 				
-				
+				// While there are items in the result set
+				// add each to the list arraylist
 				while (resultSet.next()) {
 					String name = resultSet.getString("gift_name");
 					String description = resultSet.getString("gift_description");
-					String price = resultSet.getString("gift_price");
+					double price = resultSet.getDouble("gift_price");
 					String link = resultSet.getString("gift_link");
 					Boolean purchased = resultSet.getBoolean("purchased");
 					
-					model.addRow(new Object[] {name, description, price, link, purchased});
+		            list.add(new GiftItem(name, description, link, price, purchased));
 				}
 			} 
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	public static long getListID(String listName) {
+		long listID = 0;
+		
+		return listID;
 		
 	}
 }
