@@ -10,9 +10,10 @@ public class UserInterfaceList extends JPanel {
     private DefaultTableModel tableModel;
     private JTable table;
     private java.util.List<ItemDetails> items;
-
-    public UserInterfaceList() {
-        setLayout(new BorderLayout());
+    private MainFrame mainFrame;
+    public UserInterfaceList(MainFrame mainFrame, String listName, User currentUser) {
+       this.mainFrame = mainFrame;
+    	setLayout(new BorderLayout());
         tableModel = new DefaultTableModel();
         tableModel.addColumn("Product");
         tableModel.addColumn("Purchased");
@@ -40,7 +41,7 @@ public class UserInterfaceList extends JPanel {
             }
         });
         inputPanel.add(editButton);
-
+        add(inputPanel);
         table.getColumnModel().getColumn(1).setCellRenderer(new CheckBoxRenderer());
 
         table.addMouseListener(new MouseAdapter() {
@@ -125,7 +126,7 @@ public class UserInterfaceList extends JPanel {
             table.setValueAt(selectedItem.getName(), rowIndex, 0);
         }
     }
-
+   
     private void showItemDetails(int rowIndex) {
         ItemDetails selectedItem = items.get(rowIndex);
         String itemDetails = "Name: " + selectedItem.getName() + "\n" +
@@ -147,15 +148,6 @@ public class UserInterfaceList extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Interface List");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getContentPane().add(new UserInterfaceList());
-            frame.pack();
-            frame.setVisible(true);
-        });
-    }
 }
 
 class ItemDetails {

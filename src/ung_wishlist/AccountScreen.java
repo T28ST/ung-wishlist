@@ -183,8 +183,14 @@ public class AccountScreen extends JPanel{
 		// Edit list
 		editListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainFrame.showgiftEditList();
-			}
+				 int index = list.getSelectedIndex();
+                 if (index != -1) { // Check if an item is selected
+                     String selectedListName = list.getModel().getElementAt(index);
+                     // Now you have the selected list name, you can pass it to the MainFrame
+                     mainFrame.showgiftEditList(selectedListName,searchedName,currentUser);
+     			}
+                 }
+				
 		});
 		// Delete List
 		deleteListButton.addActionListener(new ActionListener() {
@@ -228,7 +234,7 @@ public class AccountScreen extends JPanel{
 	                        if (index != -1) { // Check if an item is selected
 	                            String selectedListName = list.getModel().getElementAt(index);
 	                            // Now you have the selected list name, you can pass it to the MainFrame
-	                            mainFrame.showgiftEditList(selectedListName,searchedName);
+	                            
 	                        }
 	                    }
 	                }
