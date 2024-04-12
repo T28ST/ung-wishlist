@@ -16,6 +16,7 @@ public class Authentication {
 	
 	
 	// Checks if given username already exists.	
+	// Also used for checking if searched user exists.
 	public static boolean checkUsernameExists (String username) { //for account creation
 		
 		boolean exists = false;
@@ -121,8 +122,6 @@ public class Authentication {
 	// Checks login username and password against existing data to log user in.
 	// Returns user object if successful.
 	public static User CheckLogin(String username, String password) {
-		boolean check = false;
-		
 		// Connect to DB and search for users and check against password
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
@@ -252,20 +251,26 @@ public class Authentication {
 		
 	}
 	
-	// Saves a gift to the database
-	public static void saveGift(long ID, String listName, String giftName, float giftPrice, String giftDesc, String giftLink) {
+	// Saves a gifts in a list to the database
+	public static void saveListGifts() {
+		
+		// gifts passed as object
+		// account id passed
+		// for each object:
+		// Check if gift id exists
+		// save row in db assing to account
 		
 		//try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			
-			//String sql = "";
-			
-		
-			System.out.println(giftName);
 		
 		
 	}
 	
+
+	// deleteGifts(userID listID deletedGiftsList)
+		//	for each id in list:
+		//		delete each gift on DB with that ID
+
 	public static void getUserLists(long ID, JList<String> list) {
 		ResultSet resultSet = null;
 		
@@ -345,10 +350,66 @@ public class Authentication {
 		
 	}
 
-	public static long getListID(String listName) {
+	// Get the ID of the list with the given name.
+	public static long getListID(long ID, String listName) {
 		long listID = 0;
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			String sql = "SELECT l.list_id FROM account a JOIN list l on a.account_id = l.account_id = ?";
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+				statement.setLong(1, ID);
+				ResultSet resultSet = statement.executeQuery();
+				
+				if (resultSet.next()) {
+					listID = resultSet.getLong("list_id");
+				} else {
+					System.out.println("getListID: result set is empty.");
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		return listID;
 		
 	}
+		
+	// getSearchedUser(String username)
+		// sets new User object and returns
+		// only username and ID;
+	public static User getSearchedUser(String username) {
+		User user = null;
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+
+			String sql = "SELECT username, account_id FROM account WHERE username = ?";
+			
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				
+				statement.setString(1, username);
+				
+				try(ResultSet rs = statement.executeQuery()) {
+					
+					if (rs.next()) {
+						return new User(rs.getLong("account_id"), rs.getString("username"), null, null, null);
+					} else {
+						System.out.println("getSearchedUser: result set is empty");
+					}
+					
+				}
+			}	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		return user;
+	}
+	
+	
 }
