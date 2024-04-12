@@ -1,13 +1,11 @@
 package ung_wishlist;
 
-import java.io.Reader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.table.DefaultTableModel;
 
 public class Authentication {
 	static final String DB_URL = "jdbc:postgresql://ung-swe-7079.g8z.gcp-us-east1.cockroachlabs.cloud:26257/ung_swe";
