@@ -234,7 +234,7 @@ public class AccountScreen extends JPanel{
 	                        if (index != -1) { // Check if an item is selected
 	                            String selectedListName = list.getModel().getElementAt(index);
 	                            // Now you have the selected list name, you can pass it to the MainFrame
-	                            
+	                            mainFrame.showSearchedList(selectedListName, searchedName);
 	                        }
 	                    }
 	                }

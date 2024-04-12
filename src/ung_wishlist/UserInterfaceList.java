@@ -1,22 +1,26 @@
 package ung_wishlist;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserInterfaceList extends JPanel {
+
     private DefaultTableModel tableModel;
     private JTable table;
-    private java.util.List<ItemDetails> items;
+    private List<ItemDetails> items;
     private MainFrame mainFrame;
+
     public UserInterfaceList(MainFrame mainFrame, String listName, User currentUser) {
-       this.mainFrame = mainFrame;
-    	setLayout(new BorderLayout());
-        tableModel = new DefaultTableModel();
+        this.mainFrame = mainFrame;
+        setLayout(new BorderLayout());
+        tableModel = new CustomTableModel();
         tableModel.addColumn("Product");
-        tableModel.addColumn("Purchased");
+
         table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -41,9 +45,9 @@ public class UserInterfaceList extends JPanel {
             }
         });
         inputPanel.add(editButton);
-        add(inputPanel);
-        table.getColumnModel().getColumn(1).setCellRenderer(new CheckBoxRenderer());
+        add(inputPanel, BorderLayout.NORTH);
 
+        // Add double-click listener to table
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -58,11 +62,10 @@ public class UserInterfaceList extends JPanel {
             }
         });
 
-        add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
         // Initialize list of items
-        items = new java.util.ArrayList<>();
+        items = new ArrayList<>();
     }
 
     private void showAddItemDialog() {
@@ -91,7 +94,7 @@ public class UserInterfaceList extends JPanel {
 
             // Add the item to the list and table model
             items.add(new ItemDetails(name, description, link, price));
-            Object[] rowData = {name, false};
+            Object[] rowData = {name};
             tableModel.addRow(rowData);
         }
     }
@@ -126,7 +129,7 @@ public class UserInterfaceList extends JPanel {
             table.setValueAt(selectedItem.getName(), rowIndex, 0);
         }
     }
-   
+
     private void showItemDetails(int rowIndex) {
         ItemDetails selectedItem = items.get(rowIndex);
         String itemDetails = "Name: " + selectedItem.getName() + "\n" +
@@ -136,62 +139,57 @@ public class UserInterfaceList extends JPanel {
         JOptionPane.showMessageDialog(null, itemDetails, "Item Details", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
-        public CheckBoxRenderer() {
-            setHorizontalAlignment(SwingConstants.CENTER);
-        }
-
+    class CustomTableModel extends DefaultTableModel {
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setSelected((Boolean) value);
-            return this;
+        public boolean isCellEditable(int row, int column) {
+            // Make all cells non-editable
+            return false;
         }
     }
 
-}
+    class ItemDetails {
+        private String name;
+        private String description;
+        private String link;
+        private double price;
 
-class ItemDetails {
-    private String name;
-    private String description;
-    private String link;
-    private double price;
+        public ItemDetails(String name, String description, String link, double price) {
+            this.name = name;
+            this.description = description;
+            this.link = link;
+            this.price = price;
+        }
 
-    public ItemDetails(String name, String description, String link, double price) {
-        this.name = name;
-        this.description = description;
-        this.link = link;
-        this.price = price;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public String getName() {
-        return name;
-    }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public String getDescription() {
+            return description;
+        }
 
-    public String getDescription() {
-        return description;
-    }
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+        public String getLink() {
+            return link;
+        }
 
-    public String getLink() {
-        return link;
-    }
+        public void setLink(String link) {
+            this.link = link;
+        }
 
-    public void setLink(String link) {
-        this.link = link;
-    }
+        public double getPrice() {
+            return price;
+        }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+        public void setPrice(double price) {
+            this.price = price;
+        }
     }
 }
