@@ -142,10 +142,13 @@ public class AccountScreen extends JPanel{
 		noListsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		noListsLabel.setEnabled(false);
 		rightPanel.add(noListsLabel, BorderLayout.SOUTH);
+		
 		JButton backButton = new JButton("Back");
 		backButton.setEnabled(false); // Initially disabled until a search is performed
 		rightPanel.add(backButton, BorderLayout.SOUTH);
 		JList<String> list = new JList<>();
+		
+		// Pulls lists for the current user using their ID and assigning it to this list
 		Authentication.getUserLists(currentUser.getId(), list);
 		
 		if (list.getModel().getSize() == 0) {
@@ -186,6 +189,8 @@ public class AccountScreen extends JPanel{
 				mainFrame.showgiftEditList();
 			}
 		});
+		
+		
 		// Delete List
 		deleteListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -204,6 +209,21 @@ public class AccountScreen extends JPanel{
 		searchButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        String searchedName = searchField.getText();
+		        // TODO:
+		        // Check if user exists in DB
+		        // If so, 
+		        //		save user in new User object
+		        //		assign that user's lists to list to display
+		        //		Change edit button to view
+		        //		change delete button to disable
+		        // 		Show back button
+		        // If not
+		        //		Show error screen;
+		        //
+		        // When back is pressed:
+		        //		clear searched user
+		        //		reset buttons
+		        
 		        // Update the right panel with the searched person's name
 	            listLabel.setText("Lists for " + searchedName);
 	            // Generating a random list name for demonstration purposes
