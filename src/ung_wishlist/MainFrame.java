@@ -23,7 +23,7 @@ public class MainFrame {
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
 		UserInterfaceList = new UserInterfaceList();
-		SearchUserLists = new SearchUserLists(null, null);
+		
 		frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
 
 		accountPanel = new AccountScreen(this, null);
@@ -65,12 +65,7 @@ public class MainFrame {
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "UserInterfaceList");
 	}
-	public void showSearchedUserList(String searchedName) {
-	    CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
-	    SearchUserLists searchUserLists = new SearchUserLists(this, searchedName);
-	    frame.getContentPane().add(searchUserLists, "searchUserList");
-	    cardLayout.show(frame.getContentPane(), "searchUserList");
-	}
+	
 	// Set Current User
 	// sets the user when login is successful
 	public void setCurrentUser(ResultSet user) {
