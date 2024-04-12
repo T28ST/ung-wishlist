@@ -1,6 +1,9 @@
 package ung_wishlist;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.sql.ResultSet;
@@ -13,6 +16,8 @@ import java.awt.Insets;
 import java.awt.FlowLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -178,7 +183,7 @@ public class AccountScreen extends JPanel{
 		// Edit list
 		editListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainFrame.showEditList();
+				mainFrame.showgiftEditList();
 			}
 		});
 		// Delete List
@@ -215,8 +220,27 @@ public class AccountScreen extends JPanel{
 	            deleteListButton.setEnabled(false);
 	            // Show back button
 	            backButton.setEnabled(true);
+	            list.addMouseListener(new MouseAdapter() {
+	                @Override
+	                public void mouseClicked(MouseEvent e) {
+	                    if (e.getClickCount() == 2) { // Double-click detected
+	                        int index = list.getSelectedIndex();
+	                        if (index != -1) { // Check if an item is selected
+	                            String selectedListName = list.getModel().getElementAt(index);
+	                            // Now you have the selected list name, you can pass it to the MainFrame
+	                            mainFrame.showgiftEditList(selectedListName,searchedName);
+	                        }
+	                    }
+	                }
+	            });
+		    
+		    
+		    
+		    
 		    }
+		
 		});
+		
 		backButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        // Clear the search field

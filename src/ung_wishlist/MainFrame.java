@@ -10,9 +10,10 @@ public class MainFrame {
 	private JPanel loginPanel;
 	private JPanel createAccountPanel;
 	private JPanel accountPanel;
-	private ResultSet currentUser;
 	private JPanel UserInterfaceList;
-	private JPanel SearchUserLists;
+	private JPanel ViewSearchedList;
+	private ResultSet currentUser;
+	
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,13 +25,9 @@ public class MainFrame {
 		createAccountPanel = new CreateAccount(this);
 		UserInterfaceList = new UserInterfaceList();
 		
-		frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
-
-		accountPanel = new AccountScreen(this, null);
-
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
-		frame.getContentPane().add(SearchUserLists, "searchUserList");
+		frame.getContentPane().add(UserInterfaceList,"UserInterfaceList");
 		// searchPanel
 		// giftListPanel
 		
@@ -61,11 +58,16 @@ public class MainFrame {
 	// showSearchScreen
 	
 	// showGiftListView
-	public void showEditList() {
+	public void showgiftEditList() {
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "UserInterfaceList");
 	}
-	
+	public void showgiftEditList(String listName, String searchedUser) {
+	    ViewSearchedList = new ViewSearchedList(this, listName,searchedUser); // Assuming ViewSearchedList takes the list name as a parameter
+	    frame.getContentPane().add(ViewSearchedList, "ViewSearchedList");
+	    CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
+	    cardLayout.show(frame.getContentPane(), "ViewSearchedList");
+	}
 	// Set Current User
 	// sets the user when login is successful
 	public void setCurrentUser(ResultSet user) {
