@@ -317,6 +317,36 @@ public class Authentication {
 	// deleteGifts(userID listID deletedGiftsList)
 		//	for each id in list:
 		//		delete each gift on DB with that ID
+	
+	public static void deleteGifts(List<Long> ids) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			// Create a string of ids seperated by commas
+			StringBuilder idString = new StringBuilder();
+			for (int i = 0; i < ids.size(); i++) {
+				if (i > 0) {
+					idString.append(", ");
+				}
+				idString.append("?");
+				
+			}
+			
+			// Delete Query
+			String deleteQuery = "DELETE FROM gift WHERE id IN (" + idString + ")";
+			PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+			
+			// Set id values in delete query
+			for (int i = 0; i < ids.size(); i++) {
+				deleteStatement.setLong(i + 1, ids.get(i));
+			}
+			
+			int rowsAffected = deleteStatement.executeUpdate();
+			System.out.println(rowsAffected + " row(s) deleted");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	public static void getUserLists(long ID, JList<String> list) {
 		ResultSet resultSet = null;
