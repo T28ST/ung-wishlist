@@ -55,7 +55,7 @@ public class MainFrame {
 	}
 	
 	// showSearchScreen
-	public void showgiftEditList(String listName, String searchedUser, User currentUser) {
+	public void showgiftEditList(String listName, User currentUser) {
 	    UserInterfaceList = new UserInterfaceList(this, listName,currentUser); // Assuming ViewSearchedList takes the list name as a parameter
 	    frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
 	    CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());

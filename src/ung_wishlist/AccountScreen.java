@@ -31,6 +31,7 @@ public class AccountScreen extends JPanel{
 	private MainFrame mainFrame;  
 	private User currentUser; 
 	private String searchedName;
+	private boolean viewMode; // Boolean to determine edit list action
 	
 
 	public String getSearchedName() {
@@ -48,6 +49,7 @@ public class AccountScreen extends JPanel{
 		setSize(640, 480);
 		this.mainFrame = mainFrame;
 		this.currentUser = currentUser;
+		viewMode = false;
 		
 		// UI here 
 		
@@ -186,11 +188,14 @@ public class AccountScreen extends JPanel{
 		// Edit list
 		editListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 int index = list.getSelectedIndex();
-                 if (index != -1) { // Check if an item is selected
-                     String selectedListName = list.getModel().getElementAt(index);
-                     // Now you have the selected list name, you can pass it to the MainFrame
-                     mainFrame.showgiftEditList(selectedListName,searchedName,currentUser);
+				 String listName = list.getSelectedValue();
+				 
+                 if (listName != null) { // Check if an item is selected
+                	 if (!viewMode) {
+                		 mainFrame.showgiftEditList(listName, currentUser); 
+                	 } else {
+                		 mainFrame.showSearchedList(listName, searchedName);
+                	 }
      			}
                  }
 				
@@ -214,56 +219,52 @@ public class AccountScreen extends JPanel{
 		// Search Users
 		searchButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        String searchedName = searchField.getText();
+		        searchedName = searchField.getText();
+		        viewMode = true; // 
 		        // TODO:
 		        // Check if user exists in DB
-		        // If so, 
-		        //		save user in new User object
-		        //		assign that user's lists to list to display
-		        //		Change edit button to view
-		        //		change delete button to disable
-		        // 		Show back button
-		        // If not
-		        //		Show error screen;
-		        //
-		        // When back is pressed:
-		        //		clear searched user
-		        //		reset buttons
-		        
-		        // Update the right panel with the searched person's name
-	            listLabel.setText("Lists for " + searchedName);
-	            // Generating a random list name for demonstration purposes
-	            String randomListName = "Random List"; // Replace with your actual logic to generate a random list name
-	            // Add the random list name to the JList
-	            DefaultListModel<String> model = new DefaultListModel<>();
-	            model.addElement(randomListName);
-	            list.setModel(model);
-	            // Clear the noListsLabel if there are lists available
-	            noListsLabel.setText("");
-	            noListsLabel.setEnabled(false);
-	            createListButton.setEnabled(false);
-	            editListButton.setEnabled(false);
-	            deleteListButton.setEnabled(false);
-	            // Show back button
-	            backButton.setEnabled(true);
-	            list.addMouseListener(new MouseAdapter() {
-	                @Override
-	                public void mouseClicked(MouseEvent e) {
-	                    if (e.getClickCount() == 2) { // Double-click detected
-	                        int index = list.getSelectedIndex();
-	                        if (index != -1) { // Check if an item is selected
-	                            String selectedListName = list.getModel().getElementAt(index);
-	                            // Now you have the selected list name, you can pass it to the MainFrame
-	                            mainFrame.showSearchedList(selectedListName, searchedName);
-	                        }
-	                    }
-	                }
-	            });
-		    
-		    
-		    
-		    
-		    }
+		        if( Authentication.checkUsernameExists(searchedName)) {
+		        	// Update list label with searched user's name
+		            listLabel.setText(searchedName + " Lists");
+		            // Assign new User object as the searched user
+		            User searchedUser = Authentication.getSearchedUser(searchedName);
+		            // Get that user's list.
+		            Authentication.getUserLists(searchedUser.getId(), list);
+		            // Check if this user has any lists
+		            if (list.getModel().getSize() == 0) {
+		            	// If not list, reflect with noListsLabel
+		    			noListsLabel.setText(searchedName + " has no lists!");
+		    			noListsLabel.setEnabled(true);
+		    		} else {
+		    			// otherwise, turn label off.
+		    			noListsLabel.setEnabled(false);
+		    		}
+		            
+		            createListButton.setEnabled(false); // Disable create list button
+		            editListButton.setText("View List"); // Edit list button becomes View list button,
+		            deleteListButton.setEnabled(false); // Disable edit list button
+		            backButton.setEnabled(true); // Enable back button to leave search.
+		            
+		            // Adds double click function to list.
+		            //(Should add to constructor with same function as view list for consistency.)
+		            list.addMouseListener(new MouseAdapter() {
+		                @Override
+		                public void mouseClicked(MouseEvent e) {
+		                    if (e.getClickCount() == 2) { // Double-click detected
+		                        String listName = list.getSelectedValue();
+		                        if (listName != null) { // Check if list item is selected
+		                            mainFrame.showSearchedList(listName, searchedName);
+		                        }
+		                    }
+		                }
+		            });
+
+
+		        } else {
+		        	JOptionPane.showMessageDialog(null, "User does not exist!");
+
+		        }
+		     }
 		
 		});
 		
