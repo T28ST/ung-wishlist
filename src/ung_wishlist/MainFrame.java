@@ -10,9 +10,10 @@ public class MainFrame {
 	private JPanel loginPanel;
 	private JPanel createAccountPanel;
 	private JPanel accountPanel;
-	private ResultSet currentUser;
 	private JPanel UserInterfaceList;
-	private JPanel SearchUserLists;
+	private JPanel ViewSearchedList;
+	private ResultSet currentUser;
+	
 	public MainFrame() {
 		frame = new JFrame("Secret Shopper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,14 +23,13 @@ public class MainFrame {
 		
 		loginPanel = new LoginPanel(this);
 		createAccountPanel = new CreateAccount(this);
-		
+
 		SearchUserLists = new SearchUserLists(null, null);
 		frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
 
-
 		frame.getContentPane().add(loginPanel, "loginPanel");
 		frame.getContentPane().add(createAccountPanel, "createAccountPanel");
-		frame.getContentPane().add(SearchUserLists, "searchUserList");
+		frame.getContentPane().add(UserInterfaceList,"UserInterfaceList");
 		// searchPanel
 		// giftListPanel
 		
@@ -61,17 +61,19 @@ public class MainFrame {
 	// showSearchScreen
 	
 	// showGiftListView
+
 	public void showEditList(String listName) {
 		long listID = Authentication.getListID(listName);
 		UserInterfaceList = new UserInterfaceList(listID);
+
 		CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 		cardLayout.show(frame.getContentPane(), "UserInterfaceList");
 	}
-	public void showSearchedUserList(String searchedName) {
+	public void showgiftEditList(String listName, String searchedUser) {
+	    ViewSearchedList = new ViewSearchedList(this, listName,searchedUser); // Assuming ViewSearchedList takes the list name as a parameter
+	    frame.getContentPane().add(ViewSearchedList, "ViewSearchedList");
 	    CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
-	    SearchUserLists searchUserLists = new SearchUserLists(this, searchedName);
-	    frame.getContentPane().add(searchUserLists, "searchUserList");
-	    cardLayout.show(frame.getContentPane(), "searchUserList");
+	    cardLayout.show(frame.getContentPane(), "ViewSearchedList");
 	}
 	// Set Current User
 	// sets the user when login is successful
