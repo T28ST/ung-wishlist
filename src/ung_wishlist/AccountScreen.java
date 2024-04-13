@@ -1,26 +1,16 @@
 package ung_wishlist;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 // Class purpose: 
 // Account options with gifts list here and buttons to create a new one
@@ -32,7 +22,7 @@ public class AccountScreen extends JPanel{
 	private User currentUser; 
 	private String searchedName;
 	private boolean viewMode; // Boolean to determine edit list action
-	
+	User searchedUser;
 
 	public String getSearchedName() {
 		return searchedName;
@@ -184,7 +174,7 @@ public class AccountScreen extends JPanel{
 				}
 			}
 		});
-		
+	
 		// Edit list
 		editListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -192,7 +182,7 @@ public class AccountScreen extends JPanel{
 				 
                  if (listName != null) { // Check if an item is selected
                 	 if (!viewMode) {
-                		 mainFrame.showgiftEditList(listName, currentUser); 
+                		 mainFrame.showGiftEditList(listName, currentUser); 
                 	 } else {
                 		 mainFrame.showSearchedList(listName, searchedName);
                 	 }
@@ -200,8 +190,7 @@ public class AccountScreen extends JPanel{
                  }
 				
 		});
-		
-		
+	
 		// Delete List
 		deleteListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -221,13 +210,12 @@ public class AccountScreen extends JPanel{
 		    public void actionPerformed(ActionEvent e) {
 		        searchedName = searchField.getText();
 		        viewMode = true; // 
-		        // TODO:
 		        // Check if user exists in DB
 		        if( Authentication.checkUsernameExists(searchedName)) {
 		        	// Update list label with searched user's name
 		            listLabel.setText(searchedName + " Lists");
 		            // Assign new User object as the searched user
-		            User searchedUser = Authentication.getSearchedUser(searchedName);
+		            searchedUser = Authentication.getSearchedUser(searchedName);
 		            // Get that user's list.
 		            Authentication.getUserLists(searchedUser.getId(), list);
 		            // Check if this user has any lists
@@ -270,17 +258,22 @@ public class AccountScreen extends JPanel{
 		
 		backButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	viewMode = false;
+		    	searchedUser.logout();
 		        // Clear the search field
 		        searchField.setText("");
-		        // Enable edit buttons
+		        // Restore buttons.
 		        createListButton.setEnabled(true);
-		        editListButton.setEnabled(true);
+		        editListButton.setText("Edit List");
 		        deleteListButton.setEnabled(true);
 		        // Hide back button
 		        backButton.setEnabled(false);
 		        // Refresh right panel with the original user's data
-		        // You may need to implement a method to reload the original user's data
-		        // and update the right panel accordingly
+		        Authentication.getUserLists(currentUser.getId(), list);
+		        if (list.getModel().getSize() == 0) {
+					noListsLabel.setText("You don't have a list!");
+					noListsLabel.setEnabled(true);
+				}
 		    }
 		});
 	}

@@ -1,7 +1,6 @@
 package ung_wishlist;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -250,7 +249,7 @@ public class Authentication {
 	}
 	
 	// Saves a gifts in a list to the database
-	public static void saveListGifts(long listID, ArrayList<ItemDetails> gifts) {
+	public static void saveListGifts(long listID, List<ItemDetails> gifts) {
 		
 		// gifts passed as object
 		// account id passed
@@ -283,13 +282,14 @@ public class Authentication {
 				} else {
 					// If the item doesn't already exist
 					// add to table
-					String insertQuery = "INSERT INTO gift (gift_title, gift_desc, gift_price, gift_link, purchased) VALUES (?,?,?,?,?)";
+					String insertQuery = "INSERT INTO gift (gift_title, gift_desc, gift_price, gift_link, purchased, list_id) VALUES (?,?,?,?,?,?)";
 					PreparedStatement insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
 					insertStatement.setString(1, gift.getName());
 					insertStatement.setString(2, gift.getDescription());
 					insertStatement.setDouble(3, gift.getPrice());
 					insertStatement.setString(4, gift.getLink());
 					insertStatement.setBoolean(5, gift.getPurchased());
+					insertStatement.setLong(6, listID);
 					insertStatement.executeUpdate();
 					
 					ResultSet generatedKeys = insertStatement.getGeneratedKeys();
@@ -394,13 +394,13 @@ public class Authentication {
 		}
 	}
 
-	public static void getListGifts(long ID, List<GiftItem> list) {
+	public static void getListGifts(long ID, List<ItemDetails> list) {
 		ResultSet resultSet = null;
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
 		
-			String sql = "SELECT g.gift_title, g.gift_desc, g.gift_price, g.gift_link, g.purchased FROM list l JOIN gift g ON g.list_id = l.list_id WHERE l.list_id = ?"; 
+			String sql = "SELECT g.gift_id, g.gift_title, g.gift_desc, g.gift_price, g.gift_link, g.purchased FROM list l JOIN gift g ON g.list_id = l.list_id WHERE l.list_id = ?"; 
 			
 			try(PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
 				statement.setLong(1, ID);
@@ -409,13 +409,14 @@ public class Authentication {
 				// While there are items in the result set
 				// add each to the list arraylist
 				while (resultSet.next()) {
+					long giftId = resultSet.getLong("gift_id");
 					String name = resultSet.getString("gift_name");
 					String description = resultSet.getString("gift_description");
 					double price = resultSet.getDouble("gift_price");
 					String link = resultSet.getString("gift_link");
 					Boolean purchased = resultSet.getBoolean("purchased");
 					
-		            list.add(new GiftItem(name, description, link, price, purchased));
+		            list.add(new ItemDetails(giftId, name, description, link, price, purchased));
 				}
 			} 
 			
@@ -431,7 +432,7 @@ public class Authentication {
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			String sql = "SELECT l.list_id FROM account a JOIN list l on a.account_id = l.account_id = ?";
+			String sql = "SELECT l.list_id FROM account a JOIN list l ON a.account_id = l.account_id WHERE l.account_id = ?";
 			
 			try (PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
 				statement.setLong(1, ID);

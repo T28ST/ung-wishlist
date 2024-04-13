@@ -2,7 +2,6 @@ package ung_wishlist;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.sql.*;
 
 public class MainFrame {
@@ -55,7 +54,7 @@ public class MainFrame {
 	}
 	
 	// showSearchScreen
-	public void showgiftEditList(String listName, User currentUser) {
+	public void showGiftEditList(String listName, User currentUser) {
 	    UserInterfaceList = new UserInterfaceList(this, listName,currentUser); // Assuming ViewSearchedList takes the list name as a parameter
 	    frame.getContentPane().add(UserInterfaceList, "UserInterfaceList");
 	    CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());

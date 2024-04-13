@@ -14,13 +14,20 @@ public class UserInterfaceList extends JPanel {
     private JTable table;
     private List<ItemDetails> items;
     private MainFrame mainFrame;
+    private long listID;
+    private User currentUser;
 
     public UserInterfaceList(MainFrame mainFrame, String listName, User currentUser) {
         this.mainFrame = mainFrame;
         setLayout(new BorderLayout());
         tableModel = new CustomTableModel();
         tableModel.addColumn("Product");
+        listID = Authentication.getListID(currentUser.getId(), listName);
+        this.currentUser = currentUser;
 
+     // Get gifts from database.
+        Authentication.getListGifts(currentUser.getId(), items);
+        
         table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -45,6 +52,14 @@ public class UserInterfaceList extends JPanel {
             }
         });
         inputPanel.add(editButton);
+        
+        JButton saveButton = new JButton("Save List");
+        saveButton.addActionListener(e -> {
+        	saveList();
+        });
+        
+        inputPanel.add(saveButton);
+        
         add(inputPanel, BorderLayout.NORTH);
 
         // Add double-click listener to table
@@ -66,6 +81,7 @@ public class UserInterfaceList extends JPanel {
 
         // Initialize list of items
         items = new ArrayList<>();
+        
     }
 
     private void showAddItemDialog() {
@@ -84,6 +100,8 @@ public class UserInterfaceList extends JPanel {
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
 
+        // NEED: ADD TYPE CHECK TO INPUT
+        
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Item",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
@@ -91,9 +109,10 @@ public class UserInterfaceList extends JPanel {
             String description = descriptionField.getText();
             String link = linkField.getText();
             double price = Double.parseDouble(priceField.getText());
+            boolean purchased = false;
 
             // Add the item to the list and table model
-            items.add(new ItemDetails(name, description, link, price));
+            items.add(new ItemDetails((long) 0, name, description, link, price, purchased));
             Object[] rowData = {name};
             tableModel.addRow(rowData);
         }
@@ -139,6 +158,12 @@ public class UserInterfaceList extends JPanel {
         JOptionPane.showMessageDialog(null, itemDetails, "Item Details", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    private void saveList() {
+    	Authentication.saveListGifts(listID, items);
+    	JOptionPane.showMessageDialog(null, "List saved!");
+    	mainFrame.showAccountScreen(currentUser);
+    }
+    
     class CustomTableModel extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {

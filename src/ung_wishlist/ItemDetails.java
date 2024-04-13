@@ -17,6 +17,14 @@ class ItemDetails {
         this.purchased = purchased;
     }
     
+    public void createItem(String name, String desc, String link, double price, boolean purchased) {
+    	this.name = name;
+        this.description = desc;
+        this.link = link;
+        this.price = price;
+        this.purchased = purchased;
+    }
+    
     public long getID() {
     	return ID;
     }
