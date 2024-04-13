@@ -12,7 +12,7 @@ public class UserInterfaceList extends JPanel {
 
     private DefaultTableModel tableModel;
     private JTable table;
-    private List<ItemDetails> items;
+    private ArrayList<ItemDetails> items;
     private MainFrame mainFrame;
     private long listID;
     private User currentUser;
@@ -25,8 +25,7 @@ public class UserInterfaceList extends JPanel {
         listID = Authentication.getListID(currentUser.getId(), listName);
         this.currentUser = currentUser;
 
-     // Get gifts from database.
-        Authentication.getListGifts(currentUser.getId(), items);
+
         
         table = new JTable(tableModel) {
             @Override
@@ -34,10 +33,17 @@ public class UserInterfaceList extends JPanel {
                 return false; // Make all cells non-editable
             }
         };
+        
+       
         JScrollPane scrollPane = new JScrollPane(table);
         table.setBackground(Color.gray);
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        
+        JButton backButton = new JButton("Go back.");
+        backButton.addActionListener(e ->goBack());
+        inputPanel.add(backButton);
+        
         JButton addButton = new JButton("Add Item");
         addButton.addActionListener(e -> showAddItemDialog());
         inputPanel.add(addButton);
@@ -60,6 +66,8 @@ public class UserInterfaceList extends JPanel {
         
         inputPanel.add(saveButton);
         
+       
+        
         add(inputPanel, BorderLayout.NORTH);
 
         // Add double-click listener to table
@@ -80,8 +88,15 @@ public class UserInterfaceList extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         // Initialize list of items
-        items = new ArrayList<>();
+        items = Authentication.getListGifts(listID);
         
+        for (ItemDetails item : items) {
+        	Object[] rowData = {item.getName()};
+        	tableModel.addRow(rowData);
+        }
+        
+        table.revalidate();
+        table.repaint();
     }
 
     private void showAddItemDialog() {
@@ -161,7 +176,24 @@ public class UserInterfaceList extends JPanel {
     private void saveList() {
     	Authentication.saveListGifts(listID, items);
     	JOptionPane.showMessageDialog(null, "List saved!");
-    	mainFrame.showAccountScreen(currentUser);
+    }
+    
+    private void goBack() {
+    	String title = "Confirmation";
+    	String message = "Are you sure? Leaving without saving will lose progress."; 
+    	int optionType = JOptionPane.YES_NO_OPTION;
+    	int messageType = JOptionPane.WARNING_MESSAGE;
+    	
+    	int choice = JOptionPane.showConfirmDialog(null, message, title, optionType, messageType);
+    	
+    	if (choice == JOptionPane.YES_OPTION) {
+    		System.out.println("Return to account screen.");
+        	mainFrame.showAccountScreen(currentUser);
+    	} else {
+    		System.out.println("Cancel back button.");
+    		return;
+    	}
+    	
     }
     
     class CustomTableModel extends DefaultTableModel {

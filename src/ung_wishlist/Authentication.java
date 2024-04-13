@@ -1,6 +1,7 @@
 package ung_wishlist;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -260,9 +261,9 @@ public class Authentication {
 			
 			for (ItemDetails gift : gifts) {
 				
-				String selectQuery = "SELECT * FROM gift WHERE list_id = ?";
+				String selectQuery = "SELECT * FROM gift WHERE gift_id = ?";
 				PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
-				selectStatement.setLong(1, listID);
+				selectStatement.setLong(1, gift.getID());
 				ResultSet resultSet = selectStatement.executeQuery();
 				
 				if (resultSet.next()) {
@@ -394,9 +395,9 @@ public class Authentication {
 		}
 	}
 
-	public static void getListGifts(long ID, List<ItemDetails> list) {
+	public static ArrayList<ItemDetails> getListGifts(long ID) {
 		ResultSet resultSet = null;
-		
+		ArrayList<ItemDetails> list = new ArrayList<>();
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
 		
@@ -410,8 +411,8 @@ public class Authentication {
 				// add each to the list arraylist
 				while (resultSet.next()) {
 					long giftId = resultSet.getLong("gift_id");
-					String name = resultSet.getString("gift_name");
-					String description = resultSet.getString("gift_description");
+					String name = resultSet.getString("gift_title");
+					String description = resultSet.getString("gift_desc");
 					double price = resultSet.getDouble("gift_price");
 					String link = resultSet.getString("gift_link");
 					Boolean purchased = resultSet.getBoolean("purchased");
@@ -423,7 +424,7 @@ public class Authentication {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+		return list;
 	}
 
 	// Get the ID of the list with the given name.

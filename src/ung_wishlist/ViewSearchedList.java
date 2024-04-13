@@ -45,15 +45,6 @@ public class ViewSearchedList extends JPanel {
         tableModel.addColumn("Price");
         tableModel.addColumn("Purchased");
         // Add some test data to the table
-        Object[][] testData = {
-                {"Item 1", "Description 1", "Link 1", 10.99,false},
-                {"Item 2", "Description 2", "Link 2", 20.49,false},
-                {"Item 3", "Description 3", "Link 3", 15.79,false}
-        };
-
-        for (Object[] data : testData) {
-            tableModel.addRow(data);
-        }
 
         table = new JTable(tableModel);
         table.setDefaultEditor(Object.class, null);
