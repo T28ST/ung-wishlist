@@ -26,28 +26,30 @@ public class UserInterfaceList extends JPanel {
         tableModel.addColumn("Link");
         tableModel.addColumn("Price");
         tableModel.addColumn("Purchased");
+        
         listID = Authentication.getListID(currentUser.getId(), listName);
         this.currentUser = currentUser;
 
-
-        
         table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Make all cells non-editable
             }
         };
-        
-       
+
         JScrollPane scrollPane = new JScrollPane(table);
         table.setBackground(Color.gray);
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        
+
         JButton backButton = new JButton("Go back.");
-        backButton.addActionListener(e ->goBack());
+        backButton.addActionListener(e -> goBack());
         inputPanel.add(backButton);
-        
+
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteSelectedRow());
+        inputPanel.add(deleteButton);
+
         JButton addButton = new JButton("Add Item");
         addButton.addActionListener(e -> showAddItemDialog());
         inputPanel.add(addButton);
@@ -62,16 +64,14 @@ public class UserInterfaceList extends JPanel {
             }
         });
         inputPanel.add(editButton);
-        
+
         JButton saveButton = new JButton("Save List");
         saveButton.addActionListener(e -> {
-        	saveList();
+            saveList();
         });
-        
+
         inputPanel.add(saveButton);
-        
-       
-        
+
         add(inputPanel, BorderLayout.NORTH);
 
         // Add double-click listener to table
@@ -92,18 +92,33 @@ public class UserInterfaceList extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         items = Authentication.getListGifts(listID);
-        
+
         for (ItemDetails item : items) {
-        	Object[] rowData = new Object[5];
-            rowData[0] = item.getName(); 			// Product
+            Object[] rowData = new Object[5];
+            rowData[0] = item.getName();            // Product
             rowData[1] = item.getDescription(); // Description
-            rowData[2] = item.getLink(); 				// Link
-            rowData[3] = item.getPrice(); 			// Price
-            rowData[4] = item.getPurchased(); 	// Purchased
-            
+            rowData[2] = item.getLink();               // Link
+            rowData[3] = item.getPrice();             // Price
+            rowData[4] = item.getPurchased();     // Purchased
+
             tableModel.addRow(rowData);
         }
 
+    }
+
+    private void deleteSelectedRow() {
+         int selectedRow = table.getSelectedRow();
+         if (selectedRow != -1) {
+             // Remove the selected row from the table model and the items list
+             tableModel.removeRow(selectedRow);
+             ItemDetails selectedItem = items.remove(selectedRow);
+         
+             List<Long> ids = new ArrayList<>();
+             ids.add(selectedItem.getID());
+             Authentication.deleteGifts(ids);
+         } else {
+             JOptionPane.showMessageDialog(null, "Please select a row to remove.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+         }
     }
 
     private void showAddItemDialog() {
@@ -122,8 +137,6 @@ public class UserInterfaceList extends JPanel {
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
 
-        // NEED: ADD TYPE CHECK TO INPUT
-        
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Item",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
@@ -134,8 +147,9 @@ public class UserInterfaceList extends JPanel {
             boolean purchased = false;
 
             // Add the item to the list and table model
-            items.add(new ItemDetails((long) 0, name, description, link, price, purchased));
-            Object[] rowData = {name};
+            ItemDetails newItem = new ItemDetails((long) 0, name, description, link, price, purchased);
+            items.add(newItem);
+            Object[] rowData = {newItem.getName(), newItem.getDescription(), newItem.getLink(), newItem.getPrice(), newItem.getPurchased()};
             tableModel.addRow(rowData);
         }
     }
@@ -180,39 +194,34 @@ public class UserInterfaceList extends JPanel {
         JOptionPane.showMessageDialog(null, itemDetails, "Item Details", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // Saves list
     private void saveList() {
-    	Authentication.saveListGifts(listID, items);
-    	JOptionPane.showMessageDialog(null, "List saved!");
+        Authentication.saveListGifts(listID, items);
+        JOptionPane.showMessageDialog(null, "List saved!");
     }
-    
-    
-    // Asks for confirmation before returning to account screen.
+
     private void goBack() {
-    	String title = "Confirmation";
-    	String message = "Are you sure? Leaving without saving will lose progress."; 
-    	int optionType = JOptionPane.YES_NO_OPTION;
-    	int messageType = JOptionPane.WARNING_MESSAGE;
-    	
-    	int choice = JOptionPane.showConfirmDialog(null, message, title, optionType, messageType);
-    	
-    	if (choice == JOptionPane.YES_OPTION) {
-    		System.out.println("Return to account screen.");
-        	mainFrame.showAccountScreen(currentUser);
-    	} else {
-    		System.out.println("Cancel back button.");
-    		return;
-    	}
-    	
+        String title = "Confirmation";
+        String message = "Are you sure? Leaving without saving will lose progress."; 
+        int optionType = JOptionPane.YES_NO_OPTION;
+        int messageType = JOptionPane.WARNING_MESSAGE;
+        
+        int choice = JOptionPane.showConfirmDialog(null, message, title, optionType, messageType);
+        
+        if (choice == JOptionPane.YES_OPTION) {
+            System.out.println("Return to account screen.");
+            mainFrame.showAccountScreen(currentUser);
+        } else {
+            System.out.println("Cancel back button.");
+            return;
+        }
+        
     }
-    
+
     class CustomTableModel extends DefaultTableModel {
         @Override
         public boolean isCellEditable(int row, int column) {
-            // Make all cells non-editable
             return false;
         }
     }
-
-
 }
+

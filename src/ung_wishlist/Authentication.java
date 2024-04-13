@@ -330,7 +330,7 @@ public class Authentication {
 			}
 			
 			// Delete Query
-			String deleteQuery = "DELETE FROM gift WHERE id IN (" + idString + ")";
+			String deleteQuery = "DELETE FROM gift WHERE gift_id IN (" + idString + ")";
 			PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
 			
 			// Set id values in delete query

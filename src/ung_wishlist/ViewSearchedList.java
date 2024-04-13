@@ -39,7 +39,8 @@ public class ViewSearchedList extends JPanel {
         JLabel listLabel = new JLabel("List: " + listName);
         headerPanel.add(listLabel);
         add(headerPanel, BorderLayout.NORTH);
-
+        JButton backButton = new JButton("Back");
+        headerPanel.add(backButton);
         // Button to mark item as greyed out
         markAsPurchased = new JButton("Mark as Purchased");
         headerPanel.add(markAsPurchased);
@@ -68,15 +69,21 @@ public class ViewSearchedList extends JPanel {
         }
         
         
-        // Panel to display item details
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               
+                mainFrame.showAccountScreen(searchedUser); 
+            }
+        });
         itemDetailsPanel = new JPanel(new BorderLayout());
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
         add(itemDetailsPanel, BorderLayout.SOUTH);
 
-        // Add double-click listener to table
+        
     
-
+        
         // Add action listener to markAsGreyButton
         markAsPurchased.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -85,7 +92,7 @@ public class ViewSearchedList extends JPanel {
                     // Update the value in the last column to true for the selected rows
                     tableModel.setValueAt(true, selectedRow, table.getColumnCount() - 1);
                 }
-                // Repaint the table
+               
                 table.repaint();
             }
         });

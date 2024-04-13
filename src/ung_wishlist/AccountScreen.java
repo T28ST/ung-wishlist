@@ -122,7 +122,7 @@ public class AccountScreen extends JPanel{
 		gbc_searchButton.gridy = 8;
 		searchPanel.add(searchButton, gbc_searchButton);
 		
-		// Right panel components
+	
 
 
 		
