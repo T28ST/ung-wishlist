@@ -22,6 +22,10 @@ public class UserInterfaceList extends JPanel {
         setLayout(new BorderLayout());
         tableModel = new CustomTableModel();
         tableModel.addColumn("Product");
+        tableModel.addColumn("Description");
+        tableModel.addColumn("Link");
+        tableModel.addColumn("Price");
+        tableModel.addColumn("Purchased");
         listID = Authentication.getListID(currentUser.getId(), listName);
         this.currentUser = currentUser;
 
@@ -87,16 +91,19 @@ public class UserInterfaceList extends JPanel {
 
         add(scrollPane, BorderLayout.CENTER);
 
-        // Initialize list of items
         items = Authentication.getListGifts(listID);
         
         for (ItemDetails item : items) {
-        	Object[] rowData = {item.getName()};
-        	tableModel.addRow(rowData);
+        	Object[] rowData = new Object[5];
+            rowData[0] = item.getName(); 			// Product
+            rowData[1] = item.getDescription(); // Description
+            rowData[2] = item.getLink(); 				// Link
+            rowData[3] = item.getPrice(); 			// Price
+            rowData[4] = item.getPurchased(); 	// Purchased
+            
+            tableModel.addRow(rowData);
         }
-        
-        table.revalidate();
-        table.repaint();
+
     }
 
     private void showAddItemDialog() {
@@ -173,11 +180,14 @@ public class UserInterfaceList extends JPanel {
         JOptionPane.showMessageDialog(null, itemDetails, "Item Details", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    // Saves list
     private void saveList() {
     	Authentication.saveListGifts(listID, items);
     	JOptionPane.showMessageDialog(null, "List saved!");
     }
     
+    
+    // Asks for confirmation before returning to account screen.
     private void goBack() {
     	String title = "Confirmation";
     	String message = "Are you sure? Leaving without saving will lose progress."; 

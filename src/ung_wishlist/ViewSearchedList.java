@@ -22,12 +22,17 @@ public class ViewSearchedList extends JPanel {
     private JPanel itemDetailsPanel;
     private JButton markAsPurchased; // Button to mark item as greyed out
     private List<Integer> greyedOutRows; // List to keep track of greyed out rows
+    private ArrayList<ItemDetails> items;
     private MainFrame mainFrame;
+    private long listID;
+    private User searchedUser;
 
-    public ViewSearchedList(MainFrame mainFrame, String listName, String searchedUser) {
+    public ViewSearchedList(MainFrame mainFrame, String listName, String search) {
         setLayout(new BorderLayout());
         this.mainFrame = mainFrame;
         greyedOutRows = new ArrayList<>();
+        searchedUser = Authentication.getSearchedUser(search); // Assigns searched user object 
+        listID = Authentication.getListID(searchedUser.getId(), listName); // gets list ID if the list being viewed.
 
         // Panel to display list name
         JPanel headerPanel = new JPanel();
@@ -48,6 +53,20 @@ public class ViewSearchedList extends JPanel {
 
         table = new JTable(tableModel);
         table.setDefaultEditor(Object.class, null);
+        
+        items = Authentication.getListGifts(listID);
+        
+        for (ItemDetails item : items) {
+        	Object[] rowData = new Object[5];
+            rowData[0] = item.getName(); 			// Product
+            rowData[1] = item.getDescription(); // Description
+            rowData[2] = item.getLink(); 				// Link
+            rowData[3] = item.getPrice(); 			// Price
+            rowData[4] = item.getPurchased(); 	// Purchased
+            
+            tableModel.addRow(rowData);
+        }
+        
         
         // Panel to display item details
         itemDetailsPanel = new JPanel(new BorderLayout());
@@ -136,8 +155,7 @@ public class ViewSearchedList extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus,
                                                            int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value,
-                        isSelected, hasFocus, row, column);
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 // Check if the value of the last column is true (indicating purchased)
                 boolean isPurchased = false;
                 Object lastColumnValue = table.getValueAt(row, table.getColumnCount() - 1);

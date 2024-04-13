@@ -482,11 +482,34 @@ public class Authentication {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 		return user;
 	}
 	
-	
+	// Update gift purchase status
+	public static void updatePurchased(long giftID, boolean status) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			String selectQuery = "SELECT * FROM gift WHERE gift_id = ?";
+			PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+			selectStatement.setLong(1, giftID);
+			ResultSet resultSet = selectStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				// If the gift exists
+				// Update its purchased status
+				String updateQuery = "UPDATE gift SET purchased = ? WHERE gift_id = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setBoolean(1, status);
+                updateStatement.setLong(2, giftID);
+                updateStatement.executeUpdate();
+                System.out.println("Gift " + giftID + " updated purchased status as:  " + status);
+		} else {
+			System.out.println("Gift doesn't exist in database!");
+			return;
+		}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
