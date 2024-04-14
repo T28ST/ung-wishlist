@@ -4,21 +4,13 @@ import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 
 // Class purpose: 
 // Account options with gifts list here and buttons to create a new one
@@ -29,7 +21,8 @@ public class AccountScreen extends JPanel{
 	private MainFrame mainFrame;  
 	private User currentUser; 
 	private String searchedName;
-	
+	private boolean viewMode; // Boolean to determine edit list action
+	User searchedUser;
 
 	public String getSearchedName() {
 		return searchedName;
@@ -46,6 +39,7 @@ public class AccountScreen extends JPanel{
 		setSize(640, 480);
 		this.mainFrame = mainFrame;
 		this.currentUser = currentUser;
+		viewMode = false;
 		
 		// UI here 
 		
@@ -104,12 +98,12 @@ public class AccountScreen extends JPanel{
 		
 		// User Search 
 		
-		JLabel lblNewLabel = new JLabel("User Search");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 1;
-		gbc_lblNewLabel.gridy = 3;
-		searchPanel.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel searchLabel = new JLabel("User Search");
+		GridBagConstraints gbc_searchLabel = new GridBagConstraints();
+		gbc_searchLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_searchLabel.gridx = 1;
+		gbc_searchLabel.gridy = 3;
+		searchPanel.add(searchLabel, gbc_searchLabel);
 		
 		JTextField searchField = new JTextField();
 		
@@ -128,7 +122,7 @@ public class AccountScreen extends JPanel{
 		gbc_searchButton.gridy = 8;
 		searchPanel.add(searchButton, gbc_searchButton);
 		
-		// Right panel components
+	
 
 
 		
@@ -140,10 +134,13 @@ public class AccountScreen extends JPanel{
 		noListsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		noListsLabel.setEnabled(false);
 		rightPanel.add(noListsLabel, BorderLayout.SOUTH);
+		
 		JButton backButton = new JButton("Back");
 		backButton.setEnabled(false); // Initially disabled until a search is performed
 		rightPanel.add(backButton, BorderLayout.SOUTH);
 		JList<String> list = new JList<>();
+		
+		// Pulls lists for the current user using their ID and assigning it to this list
 		Authentication.getUserLists(currentUser.getId(), list);
 		
 		if (list.getModel().getSize() == 0) {
@@ -152,19 +149,7 @@ public class AccountScreen extends JPanel{
 		}
 		
 		rightPanel.add(new JScrollPane(list), BorderLayout.CENTER);
-		list.addMouseListener((MouseListener) new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        if (e.getClickCount() == 1) { // Check for single click
-		            int index = list.locationToIndex(e.getPoint());
-		            if (index != -1) {
-		                String selectedList = list.getModel().getElementAt(index);
-		                // Show the UserInterfaceList for the selected list
-		                mainFrame.showEditList();
-		            }
-		        }
-		    }
-		});
+		
 
 		
 		// Button actions
@@ -181,13 +166,7 @@ public class AccountScreen extends JPanel{
 		createListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = JOptionPane.showInputDialog("Enter name of list: ");
-<<<<<<< Updated upstream
-				if (Authentication.checkListExists(name)) {
-					JOptionPane.showMessageDialog(null, "List already exits!");
-				} else {
-					Authentication.createList(currentUser.getId(), name);
-					Authentication.getUserLists(currentUser.getId(), list);
-=======
+
 				if (name != null) {
 					if (Authentication.checkListExists(name, currentUser.getId())) {
 						JOptionPane.showMessageDialog(null, "List already exits!");
@@ -195,17 +174,26 @@ public class AccountScreen extends JPanel{
 						Authentication.createList(currentUser.getId(), name);
 						Authentication.getUserLists(currentUser.getId(), list);
 					}
->>>>>>> Stashed changes
 				}
 			}
 		});
-		
+	
 		// Edit list
 		editListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainFrame.showEditList();
-			}
+				 String listName = list.getSelectedValue();
+				 
+                 if (listName != null) { // Check if an item is selected
+                	 if (!viewMode) {
+                		 mainFrame.showGiftEditList(listName, currentUser); 
+                	 } else {
+                		 mainFrame.showSearchedList(listName, searchedName, currentUser);
+                	 }
+     			}
+                 }
+				
 		});
+	
 		// Delete List
 		deleteListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -223,38 +211,72 @@ public class AccountScreen extends JPanel{
 		// Search Users
 		searchButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        String searchedName = searchField.getText();
-		        // Update the right panel with the searched person's name
-	            listLabel.setText("Lists for " + searchedName);
-	            // Generating a random list name for demonstration purposes
-	            String randomListName = "Random List"; // Replace with your actual logic to generate a random list name
-	            // Add the random list name to the JList
-	            DefaultListModel<String> model = new DefaultListModel<>();
-	            model.addElement(randomListName);
-	            list.setModel(model);
-	            // Clear the noListsLabel if there are lists available
-	            noListsLabel.setText("");
-	            noListsLabel.setEnabled(false);
-	            createListButton.setEnabled(false);
-	            editListButton.setEnabled(false);
-	            deleteListButton.setEnabled(false);
-	            // Show back button
-	            backButton.setEnabled(true);
-		    }
+		        searchedName = searchField.getText();
+		        viewMode = true; // 
+		        // Check if user exists in DB
+		        if( Authentication.checkUsernameExists(searchedName)) {
+		        	// Update list label with searched user's name
+		            listLabel.setText(searchedName + " Lists");
+		            // Assign new User object as the searched user
+		            searchedUser = Authentication.getSearchedUser(searchedName);
+		            // Get that user's list.
+		            Authentication.getUserLists(searchedUser.getId(), list);
+		            // Check if this user has any lists
+		            if (list.getModel().getSize() == 0) {
+		            	// If not list, reflect with noListsLabel
+		    			noListsLabel.setText(searchedName + " has no lists!");
+		    			noListsLabel.setEnabled(true);
+		    		} else {
+		    			// otherwise, turn label off.
+		    			noListsLabel.setEnabled(false);
+		    		}
+		            
+		            createListButton.setEnabled(false); // Disable create list button
+		            editListButton.setText("View List"); // Edit list button becomes View list button,
+		            deleteListButton.setEnabled(false); // Disable edit list button
+		            backButton.setEnabled(true); // Enable back button to leave search.
+		            
+		            // Adds double click function to list.
+		            //(Should add to constructor with same function as view list for consistency.)
+		            list.addMouseListener(new MouseAdapter() {
+		                @Override
+		                public void mouseClicked(MouseEvent e) {
+		                    if (e.getClickCount() == 2) { // Double-click detected
+		                        String listName = list.getSelectedValue();
+		                        if (listName != null) { // Check if list item is selected
+		                            mainFrame.showSearchedList(listName, searchedName, currentUser);
+		                        }
+		                    }
+		                }
+		            });
+
+
+		        } else {
+		        	JOptionPane.showMessageDialog(null, "User does not exist!");
+
+		        }
+		     }
+		
 		});
+		
 		backButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	viewMode = false;
+		    	searchedUser.logout();
 		        // Clear the search field
 		        searchField.setText("");
-		        // Enable edit buttons
+		        // Restore buttons.
 		        createListButton.setEnabled(true);
-		        editListButton.setEnabled(true);
+		        editListButton.setText("Edit List");
 		        deleteListButton.setEnabled(true);
 		        // Hide back button
 		        backButton.setEnabled(false);
 		        // Refresh right panel with the original user's data
-		        // You may need to implement a method to reload the original user's data
-		        // and update the right panel accordingly
+		        Authentication.getUserLists(currentUser.getId(), list);
+		        if (list.getModel().getSize() == 0) {
+					noListsLabel.setText("You don't have a list!");
+					noListsLabel.setEnabled(true);
+				}
 		    }
 		});
 	}

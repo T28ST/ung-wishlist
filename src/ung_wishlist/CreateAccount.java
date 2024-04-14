@@ -3,8 +3,6 @@ package ung_wishlist;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Reader;
-import java.sql.SQLException;
 import javax.swing.*;
 import java.awt.*;
 public class CreateAccount extends JPanel {

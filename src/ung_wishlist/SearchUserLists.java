@@ -2,14 +2,7 @@ package ung_wishlist;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.text.JTextComponent;
-import java.sql.*;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.border.BevelBorder;
+
 
 public class SearchUserLists extends JPanel {
 	   private MainFrame mainFrame;

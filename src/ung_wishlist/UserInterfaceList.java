@@ -1,31 +1,60 @@
 package ung_wishlist;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserInterfaceList extends JPanel {
+
     private DefaultTableModel tableModel;
     private JTable table;
-    private java.util.List<ItemDetails> items;
+    private ArrayList<ItemDetails> items;
+    private MainFrame mainFrame;
+    private long listID;
+    private User currentUser;
+    List<Long> ids = new ArrayList<>();
 
-    public UserInterfaceList() {
+    public UserInterfaceList(MainFrame mainFrame, String listName, User currentUser) {
+        this.mainFrame = mainFrame;
         setLayout(new BorderLayout());
-        tableModel = new DefaultTableModel();
+        tableModel = new CustomTableModel();
         tableModel.addColumn("Product");
+        tableModel.addColumn("Description");
+        tableModel.addColumn("Link");
+        tableModel.addColumn("Price");
         tableModel.addColumn("Purchased");
+        
+        
+        listID = Authentication.getListID(currentUser.getId(), listName);
+        this.currentUser = currentUser;
+
         table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Make all cells non-editable
             }
         };
+
         JScrollPane scrollPane = new JScrollPane(table);
         table.setBackground(Color.gray);
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        JButton backButton = new JButton("Go Back");
+        backButton.addActionListener(e ->goBack());
+
+        inputPanel.add(backButton);
+
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteSelectedRow());
+        inputPanel.add(deleteButton);
+
         JButton addButton = new JButton("Add Item");
         addButton.addActionListener(e -> showAddItemDialog());
         inputPanel.add(addButton);
@@ -41,8 +70,16 @@ public class UserInterfaceList extends JPanel {
         });
         inputPanel.add(editButton);
 
-        table.getColumnModel().getColumn(1).setCellRenderer(new CheckBoxRenderer());
+        JButton saveButton = new JButton("Save List");
+        saveButton.addActionListener(e -> {
+            saveList();
+        });
 
+        inputPanel.add(saveButton);
+
+        add(inputPanel, BorderLayout.NORTH);
+
+        // Add double-click listener to table
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -57,11 +94,34 @@ public class UserInterfaceList extends JPanel {
             }
         });
 
-        add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Initialize list of items
-        items = new java.util.ArrayList<>();
+        items = Authentication.getListGifts(listID);
+
+        for (ItemDetails item : items) {
+            Object[] rowData = new Object[5];
+            rowData[0] = item.getName();            // Product
+            rowData[1] = item.getDescription(); // Description
+            rowData[2] = item.getLink();               // Link
+            rowData[3] = item.getPrice();             // Price
+            rowData[4] = item.getPurchased();     // Purchased
+
+            tableModel.addRow(rowData);
+        }
+
+    }
+
+    private void deleteSelectedRow() {
+         int selectedRow = table.getSelectedRow();
+         if (selectedRow != -1) {
+             // Remove the selected row from the table model and the items list
+             tableModel.removeRow(selectedRow);
+             ItemDetails selectedItem = items.remove(selectedRow);   
+             ids.add(selectedItem.getID());
+             
+         } else {
+             JOptionPane.showMessageDialog(null, "Please select a row to remove.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
+         }
     }
 
     private void showAddItemDialog() {
@@ -79,6 +139,17 @@ public class UserInterfaceList extends JPanel {
         panel.add(linkField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
+        
+        //  Input validation for priceField
+        priceField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == '.')) {
+                    e.consume();
+                }
+            }
+        });
 
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Item",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -87,10 +158,12 @@ public class UserInterfaceList extends JPanel {
             String description = descriptionField.getText();
             String link = linkField.getText();
             double price = Double.parseDouble(priceField.getText());
+            boolean purchased = false;
 
             // Add the item to the list and table model
-            items.add(new ItemDetails(name, description, link, price));
-            Object[] rowData = {name, false};
+            ItemDetails newItem = new ItemDetails((long) 0, name, description, link, price, purchased);
+            items.add(newItem);
+            Object[] rowData = {newItem.getName(), newItem.getDescription(), newItem.getLink(), newItem.getPrice(), newItem.getPurchased()};
             tableModel.addRow(rowData);
         }
     }
@@ -112,6 +185,18 @@ public class UserInterfaceList extends JPanel {
         panel.add(linkField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
+        
+        
+        // Input validation for priceField
+        priceField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == '.')) {
+                    e.consume();
+                }
+            }
+        });
 
         int result = JOptionPane.showConfirmDialog(null, panel, "Edit Item",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -135,71 +220,49 @@ public class UserInterfaceList extends JPanel {
         JOptionPane.showMessageDialog(null, itemDetails, "Item Details", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
-        public CheckBoxRenderer() {
-            setHorizontalAlignment(SwingConstants.CENTER);
+    private void saveList() {
+        Authentication.saveListGifts(listID, items);
+        if (ids != null) {
+            Authentication.deleteGifts(ids);
         }
+        JOptionPane.showMessageDialog(null, "List saved!");
+    }
 
+    private void goBack() {
+        String title = "Confirmation";
+        String message = "Are you sure? Leaving without saving will lose progress."; 
+        int optionType = JOptionPane.YES_NO_OPTION;
+        int messageType = JOptionPane.WARNING_MESSAGE;
+        
+        int choice = JOptionPane.showConfirmDialog(null, message, title, optionType, messageType);
+        
+        if (choice == JOptionPane.YES_OPTION) {
+            System.out.println("Return to account screen.");
+            tableModel = null;
+            table = null;
+            if (items != null) {
+                items.clear();
+                items = null;
+            }
+            listID = 0;
+            if (ids != null) {
+                ids.clear();
+                ids = null;
+            }
+            
+            mainFrame.showAccountScreen(currentUser);
+        } else {
+            System.out.println("Cancel back button.");
+            return;
+        }
+        
+    }
+
+    class CustomTableModel extends DefaultTableModel {
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setSelected((Boolean) value);
-            return this;
+        public boolean isCellEditable(int row, int column) {
+            return false;
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Interface List");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getContentPane().add(new UserInterfaceList());
-            frame.pack();
-            frame.setVisible(true);
-        });
-    }
 }
 
-class ItemDetails {
-    private String name;
-    private String description;
-    private String link;
-    private double price;
-
-    public ItemDetails(String name, String description, String link, double price) {
-        this.name = name;
-        this.description = description;
-        this.link = link;
-        this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-}
