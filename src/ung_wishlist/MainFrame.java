@@ -62,8 +62,8 @@ public class MainFrame {
 	}
 	// showGiftListView
 	
-	public void showSearchedList(String listName, String searchedUser) {
-	    ViewSearchedList = new ViewSearchedList(this, listName,searchedUser); // Assuming ViewSearchedList takes the list name as a parameter
+	public void showSearchedList(String listName, String searchedUser, User currentUser) {
+	    ViewSearchedList = new ViewSearchedList(this, listName,searchedUser, currentUser); // Assuming ViewSearchedList takes the list name as a parameter
 	    frame.getContentPane().add(ViewSearchedList, "ViewSearchedList");
 	    CardLayout cardLayout = (CardLayout)(frame.getContentPane().getLayout());
 	    cardLayout.show(frame.getContentPane(), "ViewSearchedList");

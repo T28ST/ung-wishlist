@@ -3,6 +3,8 @@ package ung_wishlist;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class UserInterfaceList extends JPanel {
     private MainFrame mainFrame;
     private long listID;
     private User currentUser;
+    List<Long> ids = new ArrayList<>();
 
     public UserInterfaceList(MainFrame mainFrame, String listName, User currentUser) {
         this.mainFrame = mainFrame;
@@ -26,6 +29,7 @@ public class UserInterfaceList extends JPanel {
         tableModel.addColumn("Link");
         tableModel.addColumn("Price");
         tableModel.addColumn("Purchased");
+        
         
         listID = Authentication.getListID(currentUser.getId(), listName);
         this.currentUser = currentUser;
@@ -42,8 +46,9 @@ public class UserInterfaceList extends JPanel {
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        JButton backButton = new JButton("Go back.");
-        backButton.addActionListener(e -> goBack());
+        JButton backButton = new JButton("Go Back");
+        backButton.addActionListener(e ->goBack());
+
         inputPanel.add(backButton);
 
         JButton deleteButton = new JButton("Delete");
@@ -111,11 +116,9 @@ public class UserInterfaceList extends JPanel {
          if (selectedRow != -1) {
              // Remove the selected row from the table model and the items list
              tableModel.removeRow(selectedRow);
-             ItemDetails selectedItem = items.remove(selectedRow);
-         
-             List<Long> ids = new ArrayList<>();
+             ItemDetails selectedItem = items.remove(selectedRow);   
              ids.add(selectedItem.getID());
-             Authentication.deleteGifts(ids);
+             
          } else {
              JOptionPane.showMessageDialog(null, "Please select a row to remove.", "No Row Selected", JOptionPane.WARNING_MESSAGE);
          }
@@ -136,6 +139,17 @@ public class UserInterfaceList extends JPanel {
         panel.add(linkField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
+        
+        //  Input validation for priceField
+        priceField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == '.')) {
+                    e.consume();
+                }
+            }
+        });
 
         int result = JOptionPane.showConfirmDialog(null, panel, "Add Item",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -171,6 +185,18 @@ public class UserInterfaceList extends JPanel {
         panel.add(linkField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
+        
+        
+        // Input validation for priceField
+        priceField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!((c >= '0' && c <= '9') || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == '.')) {
+                    e.consume();
+                }
+            }
+        });
 
         int result = JOptionPane.showConfirmDialog(null, panel, "Edit Item",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -196,6 +222,9 @@ public class UserInterfaceList extends JPanel {
 
     private void saveList() {
         Authentication.saveListGifts(listID, items);
+        if (ids != null) {
+            Authentication.deleteGifts(ids);
+        }
         JOptionPane.showMessageDialog(null, "List saved!");
     }
 
@@ -209,6 +238,18 @@ public class UserInterfaceList extends JPanel {
         
         if (choice == JOptionPane.YES_OPTION) {
             System.out.println("Return to account screen.");
+            tableModel = null;
+            table = null;
+            if (items != null) {
+                items.clear();
+                items = null;
+            }
+            listID = 0;
+            if (ids != null) {
+                ids.clear();
+                ids = null;
+            }
+            
             mainFrame.showAccountScreen(currentUser);
         } else {
             System.out.println("Cancel back button.");

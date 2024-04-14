@@ -26,9 +26,11 @@ public class ViewSearchedList extends JPanel {
     private MainFrame mainFrame;
     private long listID;
     private User searchedUser;
+    private User currentUser;
 
-    public ViewSearchedList(MainFrame mainFrame, String listName, String search) {
+    public ViewSearchedList(MainFrame mainFrame, String listName, String search, User currentUser) {
         setLayout(new BorderLayout());
+        this.currentUser = currentUser;
         this.mainFrame = mainFrame;
         greyedOutRows = new ArrayList<>();
         searchedUser = Authentication.getSearchedUser(search); // Assigns searched user object 
@@ -44,6 +46,8 @@ public class ViewSearchedList extends JPanel {
         // Button to mark item as greyed out
         markAsPurchased = new JButton("Mark as Purchased");
         headerPanel.add(markAsPurchased);
+        
+        
         tableModel = new CustomTableModel();
         tableModel.addColumn("Product");
         tableModel.addColumn("Description");
@@ -73,7 +77,7 @@ public class ViewSearchedList extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                
-                mainFrame.showAccountScreen(searchedUser); 
+                mainFrame.showAccountScreen(currentUser); 
             }
         });
         itemDetailsPanel = new JPanel(new BorderLayout());
@@ -89,10 +93,17 @@ public class ViewSearchedList extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int[] selectedRows = table.getSelectedRows();
                 for (int selectedRow : selectedRows) {
-                    // Update the value in the last column to true for the selected rows
-                    tableModel.setValueAt(true, selectedRow, table.getColumnCount() - 1);
+                    // Retrieve the ID of the gift from the table model
+                    long giftID = items.get(selectedRow).getID();
+                    
+                    // Toggle the boolean value in the last column for the selected rows
+                    boolean currentValue = (boolean) tableModel.getValueAt(selectedRow, table.getColumnCount() - 1);
+                    tableModel.setValueAt(!currentValue, selectedRow, table.getColumnCount() - 1);
+                    
+                    // Update the database with the new value
+                    Authentication.updatePurchased(giftID, !currentValue);
                 }
-               
+
                 table.repaint();
             }
         });

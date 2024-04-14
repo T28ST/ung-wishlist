@@ -166,7 +166,7 @@ public class AccountScreen extends JPanel{
 		createListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = JOptionPane.showInputDialog("Enter name of list: ");
-				if (Authentication.checkListExists(name)) {
+				if (Authentication.checkListExists(name, currentUser.getId())) {
 					JOptionPane.showMessageDialog(null, "List already exits!");
 				} else {
 					Authentication.createList(currentUser.getId(), name);
@@ -184,7 +184,7 @@ public class AccountScreen extends JPanel{
                 	 if (!viewMode) {
                 		 mainFrame.showGiftEditList(listName, currentUser); 
                 	 } else {
-                		 mainFrame.showSearchedList(listName, searchedName);
+                		 mainFrame.showSearchedList(listName, searchedName, currentUser);
                 	 }
      			}
                  }
@@ -241,7 +241,7 @@ public class AccountScreen extends JPanel{
 		                    if (e.getClickCount() == 2) { // Double-click detected
 		                        String listName = list.getSelectedValue();
 		                        if (listName != null) { // Check if list item is selected
-		                            mainFrame.showSearchedList(listName, searchedName);
+		                            mainFrame.showSearchedList(listName, searchedName, currentUser);
 		                        }
 		                    }
 		                }

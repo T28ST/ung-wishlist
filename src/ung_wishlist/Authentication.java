@@ -83,17 +83,17 @@ public class Authentication {
 	}
 
 	// Checks if a list with the given name already exists.
-	public static boolean checkListExists(String listName) {
+	public static boolean checkListExists(String listName, long ID) {
 		boolean exists = false;
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			// Create SQL string to inject
 			
-			String sql = "SELECT COUNT(*) AS count FROM list WHERE list_name = ?"; // Count the number of results that have that username
+			String sql = "SELECT COUNT(*) AS count FROM list l JOIN account a ON l.account_id = a.account_id WHERE list_name = ? AND a.account_id = ?"; // Count the number of results that have that username
 			// Prepare the sql statement and add the list's name to statement
-			
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
 				statement.setString(1, listName);
+				statement.setLong(2, ID);
 				
 				// Execute SQL
 				try (ResultSet resultSet = statement.executeQuery()) {
