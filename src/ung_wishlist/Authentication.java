@@ -1,11 +1,11 @@
 package ung_wishlist;
 
-import java.io.Reader;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.table.DefaultTableModel;
 
 public class Authentication {
 	static final String DB_URL = "jdbc:postgresql://ung-swe-7079.g8z.gcp-us-east1.cockroachlabs.cloud:26257/ung_swe";
@@ -14,6 +14,7 @@ public class Authentication {
 	
 	
 	// Checks if given username already exists.	
+	// Also used for checking if searched user exists.
 	public static boolean checkUsernameExists (String username) { //for account creation
 		
 		boolean exists = false;
@@ -82,17 +83,17 @@ public class Authentication {
 	}
 
 	// Checks if a list with the given name already exists.
-	public static boolean checkListExists(String listName) {
+	public static boolean checkListExists(String listName, long ID) {
 		boolean exists = false;
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			// Create SQL string to inject
 			
-			String sql = "SELECT COUNT(*) AS count FROM list WHERE list_name = ?"; // Count the number of results that have that username
+			String sql = "SELECT COUNT(*) AS count FROM list l JOIN account a ON l.account_id = a.account_id WHERE list_name = ? AND a.account_id = ?"; // Count the number of results that have that username
 			// Prepare the sql statement and add the list's name to statement
-			
 			try (PreparedStatement statement = connection.prepareStatement(sql)) {
 				statement.setString(1, listName);
+				statement.setLong(2, ID);
 				
 				// Execute SQL
 				try (ResultSet resultSet = statement.executeQuery()) {
@@ -119,8 +120,6 @@ public class Authentication {
 	// Checks login username and password against existing data to log user in.
 	// Returns user object if successful.
 	public static User CheckLogin(String username, String password) {
-		boolean check = false;
-		
 		// Connect to DB and search for users and check against password
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
@@ -250,20 +249,104 @@ public class Authentication {
 		
 	}
 	
-	// Saves a gift to the database
-	public static void saveGift(long ID, String listName, String giftName, float giftPrice, String giftDesc, String giftLink) {
+	// Saves a gifts in a list to the database
+	public static void saveListGifts(long listID, List<ItemDetails> gifts) {
+		
+		// gifts passed as object
+		// account id passed
+		// for each object:
+		// Check if gift id exists
+		// save row in db accessing to account
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			for (ItemDetails gift : gifts) {
+				
+				String selectQuery = "SELECT * FROM gift WHERE gift_id = ?";
+				PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+				selectStatement.setLong(1, gift.getID());
+				ResultSet resultSet = selectStatement.executeQuery();
+				
+				if (resultSet.next()) {
+					// If there are items in the result set
+					// Update them with new information
+					String updateQuery = "UPDATE gift SET gift_title = ?, gift_desc = ?, gift_price = ?, gift_link = ?, purchased = ? WHERE gift_id = ?";
+					PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+					updateStatement.setString(1, gift.getName());
+					updateStatement.setString(2, gift.getDescription());
+					updateStatement.setDouble(3, gift.getPrice());
+					updateStatement.setString(4, gift.getLink());
+					updateStatement.setBoolean(5, gift.getPurchased());
+					updateStatement.setLong(6, gift.getID());
+					updateStatement.executeUpdate();
+					System.out.println("Item " + gift.getID() + " " + gift.getName() +" updated.");
+					
+				} else {
+					// If the item doesn't already exist
+					// add to table
+					String insertQuery = "INSERT INTO gift (gift_title, gift_desc, gift_price, gift_link, purchased, list_id) VALUES (?,?,?,?,?,?)";
+					PreparedStatement insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+					insertStatement.setString(1, gift.getName());
+					insertStatement.setString(2, gift.getDescription());
+					insertStatement.setDouble(3, gift.getPrice());
+					insertStatement.setString(4, gift.getLink());
+					insertStatement.setBoolean(5, gift.getPurchased());
+					insertStatement.setLong(6, listID);
+					insertStatement.executeUpdate();
+					
+					ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+					if (generatedKeys.next()) {
+						long id = generatedKeys.getLong(1);
+						System.out.println("New gift inserted with ID " + id);
+					}
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		
 		//try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			
-			//String sql = "";
-			
-		
-			System.out.println(giftName);
 		
 		
 	}
 	
+
+	// deleteGifts(userID listID deletedGiftsList)
+		//	for each id in list:
+		//		delete each gift on DB with that ID
+	
+	public static void deleteGifts(List<Long> ids) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			// Create a string of ids seperated by commas
+			StringBuilder idString = new StringBuilder();
+			for (int i = 0; i < ids.size(); i++) {
+				if (i > 0) {
+					idString.append(", ");
+				}
+				idString.append("?");
+				
+			}
+			
+			// Delete Query
+			String deleteQuery = "DELETE FROM gift WHERE gift_id IN (" + idString + ")";
+			PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
+			
+			// Set id values in delete query
+			for (int i = 0; i < ids.size(); i++) {
+				deleteStatement.setLong(i + 1, ids.get(i));
+			}
+			
+			int rowsAffected = deleteStatement.executeUpdate();
+			System.out.println(rowsAffected + " row(s) deleted");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
 	public static void getUserLists(long ID, JList<String> list) {
 		ResultSet resultSet = null;
 		
@@ -312,28 +395,117 @@ public class Authentication {
 		}
 	}
 
-	public static void getListGifts(long ID, DefaultTableModel model) {
+	public static ArrayList<ItemDetails> getListGifts(long ID) {
 		ResultSet resultSet = null;
-		
+		ArrayList<ItemDetails> list = new ArrayList<>();
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			String sql = "SELECT g.gift_title, g.gift_desc, g.gift_price, g.gift_link, g.purchased FROM list l JOIN gift g ON g.list_id = l.list_id WHERE l.list_id = ?"; 
+		
+			String sql = "SELECT g.gift_id, g.gift_title, g.gift_desc, g.gift_price, g.gift_link, g.purchased FROM list l JOIN gift g ON g.list_id = l.list_id WHERE l.list_id = ?"; 
 			
 			try(PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
 				statement.setLong(1, ID);
 				resultSet = statement.executeQuery();
 				
-				
+				// While there are items in the result set
+				// add each to the list arraylist
 				while (resultSet.next()) {
-					String name = resultSet.getString("gift_name");
-					String description = resultSet.getString("gift_description");
-					String price = resultSet.getString("gift_price");
+					long giftId = resultSet.getLong("gift_id");
+					String name = resultSet.getString("gift_title");
+					String description = resultSet.getString("gift_desc");
+					double price = resultSet.getDouble("gift_price");
 					String link = resultSet.getString("gift_link");
 					Boolean purchased = resultSet.getBoolean("purchased");
 					
-					model.addRow(new Object[] {name, description, price, link, purchased});
+		            list.add(new ItemDetails(giftId, name, description, link, price, purchased));
 				}
 			} 
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// Get the ID of the list with the given name.
+	public static long getListID(long ID, String listName) {
+		long listID = 0;
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			
+			String sql = "SELECT l.list_id FROM account a JOIN list l ON a.account_id = l.account_id WHERE l.account_id = ?";
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+				statement.setLong(1, ID);
+				ResultSet resultSet = statement.executeQuery();
+				
+				if (resultSet.next()) {
+					listID = resultSet.getLong("list_id");
+				} else {
+					System.out.println("getListID: result set is empty.");
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listID;
+		
+	}
+		
+	// getSearchedUser(String username)
+		// sets new User object and returns
+		// only username and ID;
+	public static User getSearchedUser(String username) {
+		User user = null;
+		
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+
+			String sql = "SELECT username, account_id FROM account WHERE username = ?";
+			
+			
+			try (PreparedStatement statement = connection.prepareStatement(sql)) {
+				
+				statement.setString(1, username);
+				
+				try(ResultSet rs = statement.executeQuery()) {
+					
+					if (rs.next()) {
+						return new User(rs.getLong("account_id"), rs.getString("username"), null, null, null);
+					} else {
+						System.out.println("getSearchedUser: result set is empty");
+					}
+					
+				}
+			}	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	// Update gift purchase status
+	public static void updatePurchased(long giftID, boolean status) {
+		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+			String selectQuery = "SELECT * FROM gift WHERE gift_id = ?";
+			PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+			selectStatement.setLong(1, giftID);
+			ResultSet resultSet = selectStatement.executeQuery();
+			
+			if (resultSet.next()) {
+				// If the gift exists
+				// Update its purchased status
+				String updateQuery = "UPDATE gift SET purchased = ? WHERE gift_id = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setBoolean(1, status);
+                updateStatement.setLong(2, giftID);
+                updateStatement.executeUpdate();
+                System.out.println("Gift " + giftID + " updated purchased status as:  " + status);
+		} else {
+			System.out.println("Gift doesn't exist in database!");
+			return;
+		}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
