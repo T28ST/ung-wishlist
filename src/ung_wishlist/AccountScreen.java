@@ -181,11 +181,21 @@ public class AccountScreen extends JPanel{
 		createListButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String name = JOptionPane.showInputDialog("Enter name of list: ");
+<<<<<<< Updated upstream
 				if (Authentication.checkListExists(name)) {
 					JOptionPane.showMessageDialog(null, "List already exits!");
 				} else {
 					Authentication.createList(currentUser.getId(), name);
 					Authentication.getUserLists(currentUser.getId(), list);
+=======
+				if (name != null) {
+					if (Authentication.checkListExists(name, currentUser.getId())) {
+						JOptionPane.showMessageDialog(null, "List already exits!");
+					} else {
+						Authentication.createList(currentUser.getId(), name);
+						Authentication.getUserLists(currentUser.getId(), list);
+					}
+>>>>>>> Stashed changes
 				}
 			}
 		});
