@@ -59,19 +59,28 @@ public class LoginPanel extends JPanel{
         });
        setLayout(new GridLayout(1, 2, 0, 0));
        
-       JPanel logo = new JPanel();
+       JPanel logo = new JPanel(new GridBagLayout());
        logo.setBorder(null);
        add(logo);
-       logo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+       GridBagConstraints iconConstraints = new GridBagConstraints();
+       iconConstraints.gridx = 0;
+       iconConstraints.gridy = 0;
+       iconConstraints.anchor = GridBagConstraints.CENTER;
+       iconConstraints.insets = new Insets(0, 0, 10, 0); // Add some space between icon and label
+
+       JLabel iconLabel = new JLabel();
+       iconLabel.setIcon(new ImageIcon("img/gift.png"));
+       logo.add(iconLabel, iconConstraints);
        
-       JLabel Icon = DefaultComponentFactory.getInstance().createTitle("");
-       Icon.setIcon(new ImageIcon("\\img\\gift.png"));
-       logo.add(Icon);
+       GridBagConstraints labelConstraints = new GridBagConstraints();
+       labelConstraints.gridx = 0;
+       labelConstraints.gridy = 1;
+       labelConstraints.anchor = GridBagConstraints.CENTER;
        
-       JLabel appName = DefaultComponentFactory.getInstance().createLabel("Secret Shopper");
+       JLabel appName = new JLabel("Secret Shopper");
        appName.setVerticalAlignment(SwingConstants.BOTTOM);
-       appName.setLabelFor(Icon);
-       logo.add(appName);
+       logo.add(appName, labelConstraints);
 	  
        panel.add(usernameLabel);
        panel.add(usernameField);
