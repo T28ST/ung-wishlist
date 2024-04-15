@@ -6,6 +6,11 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.awt.*;
 public class CreateAccount extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1133634437224886208L;
+
 	private MainFrame mainFrame; // Allows opening other panels for main app
 	
 	// Password requirement

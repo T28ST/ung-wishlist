@@ -3,11 +3,14 @@ package ung_wishlist;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 
 
 public class LoginPanel extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5680612198228931959L;
 	private MainFrame mainFrame;
 	private JTextField usernameField;
 	private JTextField passwordField;

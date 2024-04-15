@@ -18,8 +18,10 @@ import java.awt.event.ActionEvent;
 
 
 public class AccountScreen extends JPanel{
-	private MainFrame mainFrame;  
-	private User currentUser; 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7256841092647927354L;
 	private String searchedName;
 	private boolean viewMode; // Boolean to determine edit list action
 	User searchedUser;
@@ -37,8 +39,6 @@ public class AccountScreen extends JPanel{
 	// Passed currentUser class from LoginPanel stores
 	public AccountScreen(MainFrame mainFrame, User currentUser) {
 		setSize(640, 480);
-		this.mainFrame = mainFrame;
-		this.currentUser = currentUser;
 		viewMode = false;
 		
 		// UI here 

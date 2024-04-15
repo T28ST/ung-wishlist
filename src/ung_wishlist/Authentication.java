@@ -433,10 +433,11 @@ public class Authentication {
 		
 		try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
 			
-			String sql = "SELECT l.list_id FROM account a JOIN list l ON a.account_id = l.account_id WHERE l.account_id = ?";
+			String sql = "SELECT l.list_id FROM account a JOIN list l ON a.account_id = l.account_id WHERE l.account_id = ? AND l.list_name = ?";
 			
 			try (PreparedStatement statement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
 				statement.setLong(1, ID);
+				statement.setString(2, listName);
 				ResultSet resultSet = statement.executeQuery();
 				
 				if (resultSet.next()) {
