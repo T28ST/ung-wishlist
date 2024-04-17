@@ -92,6 +92,12 @@ public class ViewSearchedList extends JPanel {
         markAsPurchased.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int[] selectedRows = table.getSelectedRows();
+                if (selectedRows.length == 0) {
+                    // If no rows are selected, show a notification
+                    JOptionPane.showMessageDialog(ViewSearchedList.this, "Please select an item to mark as purchased.",
+                                                  "No Item Selected", JOptionPane.WARNING_MESSAGE);
+                    return; // Exit the method
+                }
                 for (int selectedRow : selectedRows) {
                     // Retrieve the ID of the gift from the table model
                     long giftID = items.get(selectedRow).getID();
@@ -107,6 +113,7 @@ public class ViewSearchedList extends JPanel {
                 table.repaint();
             }
         });
+
      
         table.addMouseListener(new MouseAdapter() {
             @Override

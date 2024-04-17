@@ -186,9 +186,12 @@ public class AccountScreen extends JPanel{
                  if (listName != null) { // Check if an item is selected
                 	 if (!viewMode) {
                 		 mainFrame.showGiftEditList(listName, currentUser); 
+                		
                 	 } else {
                 		 mainFrame.showSearchedList(listName, searchedName, currentUser);
                 	 }
+     			}else {
+     				JOptionPane.showMessageDialog(null, "No List Selected");
      			}
                  }
 				
@@ -237,7 +240,6 @@ public class AccountScreen extends JPanel{
 		            backButton.setEnabled(true); // Enable back button to leave search.
 		            
 		            // Adds double click function to list.
-		            //(Should add to constructor with same function as view list for consistency.)
 		            list.addMouseListener(new MouseAdapter() {
 		                @Override
 		                public void mouseClicked(MouseEvent e) {
@@ -245,6 +247,8 @@ public class AccountScreen extends JPanel{
 		                        String listName = list.getSelectedValue();
 		                        if (listName != null) { // Check if list item is selected
 		                            mainFrame.showSearchedList(listName, searchedName, currentUser);
+		                        }else {
+		                        	JOptionPane.showMessageDialog(null, "No list selected.");
 		                        }
 		                    }
 		                }

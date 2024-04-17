@@ -194,8 +194,7 @@ public class UserInterfaceList extends JPanel {
         panel.add(linkField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
-        
-        
+
         // Input validation for priceField
         priceField.addKeyListener(new KeyAdapter() {
             @Override
@@ -216,7 +215,13 @@ public class UserInterfaceList extends JPanel {
             selectedItem.setPrice(Double.parseDouble(priceField.getText()));
 
             // Update the values in the table model
-            table.setValueAt(selectedItem.getName(), rowIndex, 0);
+            tableModel.setValueAt(selectedItem.getName(), rowIndex, 0);
+            tableModel.setValueAt(selectedItem.getDescription(), rowIndex, 1);
+            tableModel.setValueAt(selectedItem.getLink(), rowIndex, 2);
+            tableModel.setValueAt(selectedItem.getPrice(), rowIndex, 3);
+
+            // Repaint the table to reflect the changes
+            table.repaint();
         }
     }
 
