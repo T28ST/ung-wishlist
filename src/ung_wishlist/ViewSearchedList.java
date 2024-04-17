@@ -17,21 +17,21 @@ import java.util.List;
 
 public class ViewSearchedList extends JPanel {
 
-    private DefaultTableModel tableModel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -95089540188374781L;
+	private DefaultTableModel tableModel;
     private JTable table;
     private JPanel itemDetailsPanel;
     private JButton markAsPurchased; // Button to mark item as greyed out
     private List<Integer> greyedOutRows; // List to keep track of greyed out rows
     private ArrayList<ItemDetails> items;
-    private MainFrame mainFrame;
     private long listID;
     private User searchedUser;
-    private User currentUser;
-
+    
     public ViewSearchedList(MainFrame mainFrame, String listName, String search, User currentUser) {
         setLayout(new BorderLayout());
-        this.currentUser = currentUser;
-        this.mainFrame = mainFrame;
         greyedOutRows = new ArrayList<>();
         searchedUser = Authentication.getSearchedUser(search); // Assigns searched user object 
         listID = Authentication.getListID(searchedUser.getId(), listName); // gets list ID if the list being viewed.
@@ -92,6 +92,12 @@ public class ViewSearchedList extends JPanel {
         markAsPurchased.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int[] selectedRows = table.getSelectedRows();
+                if (selectedRows.length == 0) {
+                    // If no rows are selected, show a notification
+                    JOptionPane.showMessageDialog(ViewSearchedList.this, "Please select an item to mark as purchased.",
+                                                  "No Item Selected", JOptionPane.WARNING_MESSAGE);
+                    return; // Exit the method
+                }
                 for (int selectedRow : selectedRows) {
                     // Retrieve the ID of the gift from the table model
                     long giftID = items.get(selectedRow).getID();
@@ -107,6 +113,7 @@ public class ViewSearchedList extends JPanel {
                 table.repaint();
             }
         });
+
      
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -169,7 +176,12 @@ public class ViewSearchedList extends JPanel {
     // Custom TableCellRenderer to handle greyed-out rows
     private TableCellRenderer getTableCellRenderer() {
         return new DefaultTableCellRenderer() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 5130454743462301408L;
+
+			@Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                                                            boolean isSelected, boolean hasFocus,
                                                            int row, int column) {
@@ -203,7 +215,12 @@ public class ViewSearchedList extends JPanel {
         return greyedOutRowNames;
     }
     class CustomTableModel extends DefaultTableModel {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 122178648411468014L;
+
+		@Override
         public boolean isCellEditable(int row, int column) {
             // Make cells in the last column not editable if the purchase status is false
             if (column == getColumnCount() - 1) {

@@ -5,16 +5,15 @@ import java.awt.*;
 
 
 public class SearchUserLists extends JPanel {
-	   private MainFrame mainFrame;
-	    private User currentUser;
-	    private JPanel AccountScreen;
-	    private String searchedName;
+	   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7181351200121711213L;
+	
 
 	 
 	    public SearchUserLists(MainFrame mainFrame, String searchedName) {
 	        super();
-	        this.mainFrame = mainFrame;
-	        this.searchedName = searchedName;
 	        
 	        // Use the searchedName here as needed
 	        System.out.println("Searched Name: " + searchedName);

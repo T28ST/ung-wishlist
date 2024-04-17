@@ -12,7 +12,11 @@ import java.util.List;
 
 public class UserInterfaceList extends JPanel {
 
-    private DefaultTableModel tableModel;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5497551860814190070L;
+	private DefaultTableModel tableModel;
     private JTable table;
     private ArrayList<ItemDetails> items;
     private MainFrame mainFrame;
@@ -35,7 +39,12 @@ public class UserInterfaceList extends JPanel {
         this.currentUser = currentUser;
 
         table = new JTable(tableModel) {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -2592956202210622682L;
+
+			@Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Make all cells non-editable
             }
@@ -185,8 +194,7 @@ public class UserInterfaceList extends JPanel {
         panel.add(linkField);
         panel.add(new JLabel("Price:"));
         panel.add(priceField);
-        
-        
+
         // Input validation for priceField
         priceField.addKeyListener(new KeyAdapter() {
             @Override
@@ -207,7 +215,13 @@ public class UserInterfaceList extends JPanel {
             selectedItem.setPrice(Double.parseDouble(priceField.getText()));
 
             // Update the values in the table model
-            table.setValueAt(selectedItem.getName(), rowIndex, 0);
+            tableModel.setValueAt(selectedItem.getName(), rowIndex, 0);
+            tableModel.setValueAt(selectedItem.getDescription(), rowIndex, 1);
+            tableModel.setValueAt(selectedItem.getLink(), rowIndex, 2);
+            tableModel.setValueAt(selectedItem.getPrice(), rowIndex, 3);
+
+            // Repaint the table to reflect the changes
+            table.repaint();
         }
     }
 
@@ -239,6 +253,7 @@ public class UserInterfaceList extends JPanel {
         if (choice == JOptionPane.YES_OPTION) {
             System.out.println("Return to account screen.");
             tableModel = null;
+            listID = 0;
             table = null;
             if (items != null) {
                 items.clear();
@@ -259,7 +274,12 @@ public class UserInterfaceList extends JPanel {
     }
 
     class CustomTableModel extends DefaultTableModel {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -5374719820420186664L;
+
+		@Override
         public boolean isCellEditable(int row, int column) {
             return false;
         }
